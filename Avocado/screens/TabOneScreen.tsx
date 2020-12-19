@@ -13,9 +13,9 @@ export default function TabOneScreen() {
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <EditScreenInfo path="/screens/TabOneScreen.tsx" />
       <Button onPress={() => {
-        navigation.navigate("NotFound");
+        navigation.navigate("Camera");
       }} 
-      title={"Go to not found"}/>
+      title={"Go to camera"}/>
     </View>
   );
 }

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+cd Avocado && yarn start && cd ..

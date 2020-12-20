@@ -8,13 +8,17 @@ import { Button, Text } from '../components/Themed';
 const CameraRecording: FunctionComponent = () => {
     let [cameraType, setCameraType] = useState(Camera.Constants.Type.front);
     let [seeingFace, setSeeingFace] = useState(true);
+    let [permissions, setHasPermission] = useState(false);
     let [camera, setCamera] = useState<Camera | null>(null);
     useEffect(() => {
         Camera.requestPermissionsAsync()
             .then(response => {
-                console.log(response.status);
+                setHasPermission(response.status === 'granted');
             });
     }, []);
+    if (!permissions) {
+        return (<Text>Please give permissions</Text>)
+    }
     return (
         <View style={Styles.container}>
             <Camera style={Styles.camera}

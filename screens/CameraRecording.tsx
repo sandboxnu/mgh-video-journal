@@ -1,4 +1,4 @@
-import { Camera } from 'expo-camera';
+import { Camera } from 'expo-camera'
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text } from '../components/Themed';

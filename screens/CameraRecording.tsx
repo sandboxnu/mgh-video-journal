@@ -2,48 +2,65 @@ import { Camera } from 'expo-camera'
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Text } from '../components/Themed';
-
-
+import { Ionicons } from '@expo/vector-icons';
 
 const CameraRecording: FunctionComponent = () => {
-    let [cameraType, setCameraType] = useState(Camera.Constants.Type.front);
-    let [seeingFace, setSeeingFace] = useState(true);
-    let [permissions, setHasPermission] = useState(false);
-    let [camera, setCamera] = useState<Camera | null>(null);
+    const [recording, setRecording] = useState (false);
+    const [permissions, setHasPermission] = useState(false);
+    const [camera, setCamera] = useState<Camera | null>(null);
+    const [time, setTime] = useState(0);
     useEffect(() => {
         Camera.requestPermissionsAsync()
             .then(response => {
                 setHasPermission(response.status === 'granted');
             });
+       
     }, []);
+    useEffect(() => {
+        if (recording) {
+            window.setTimeout(() => setTime(time + 1000), 1000);
+        }
+    }, [time, recording])
     if (!permissions) {
         return (<Text>Please give permissions</Text>)
+    }
+    let dateTime = new Date(60 * 5 * 1000 - time);
+    const toTens = (num: number) => num >= 10 ? '' + num : '0' + num;
+    if (dateTime.getTime() <= 0 && recording) {
+        setRecording(false);
+        camera?.stopRecording();
     }
     return (
         <View style={Styles.container}>
             <Camera style={Styles.camera}
-                type={cameraType}
-                onFacesDetected={(face) => setSeeingFace(face.faces.length > 0)}
-                ref={(camera) => setCamera(camera)}/>
-            <View style={Styles.bottomRow}>
-                <Button style={Styles.flip} onPress={() => {
-                    setCameraType(cameraType == Camera.Constants.Type.front ? Camera.Constants.Type.back : Camera.Constants.Type.front)
-                }}> 
-                    <Text style={Styles.text}>Flip</Text> 
-                </Button>
-                <Button style={Styles.takePicture} onPress={() => {
-                    if (camera) {
-                        camera.takePictureAsync()
-                            .then(pic => {
-                                console.log(pic.uri);
+            type={Camera.Constants.Type.front}
+            ref={(camera) => setCamera(camera)}
+            flashMode={Camera.Constants.FlashMode.auto}/>
+                <View style={Styles.bottomRow}>
+                    <Ionicons.Button style={Styles.icon} color='black' name={recording ? 'stop-circle' : "camera"} onPress={() => {
+                        if (camera && !recording) {
+                            setRecording(true);
+                            camera.recordAsync({ 
+                                maxFileSize: 150000000, 
+                                quality: Camera.Constants.VideoQuality['480p']
+                            }).then(vid => {
+                                console.log(vid.uri);
+                                setRecording(false);
                             })
-                    }
-                }}>
-                    <Text style={Styles.text}>Take Picture</Text>
-                </Button>
-                {!seeingFace && <Text style={Styles.faceShow}>Show your face</Text>}
-            </View>
-            
+                        }
+                        else if (camera && recording) {
+                            camera.stopRecording();
+                            setRecording(false);
+                        }
+                    }}>
+                        {recording ? 'Stop Recording' : 'Start Recording'}
+                    </Ionicons.Button>
+                </View>
+                {recording && <View style={Styles.totalTime}>
+                    <Text style={Styles.text}>
+                        Time Left: {toTens(dateTime.getMinutes()) + ':' + toTens(dateTime.getSeconds())}
+                    </Text>
+                </View> }
         </View>
         
     )
@@ -60,10 +77,6 @@ const Styles = StyleSheet.create({
         width: '100%',
         height: '100%'
     },
-    flip: {
-        flex: 1,
-        backgroundColor: '#0000'
-    },
     bottomRow: {
         bottom: 0,
         width: '100%',
@@ -72,21 +85,27 @@ const Styles = StyleSheet.create({
         justifyContent: 'space-around',
         alignContent: 'center',
         padding: 10,
-        backgroundColor: '#0000'
+    
     },
     takePicture: {
         flex: 1,
-        backgroundColor: '#0000'
+        backgroundColor: '#0000',
+        justifyContent: 'center'
     },
     text: {
         color: 'black',
         textAlign: 'center'
     },
-    faceShow: {
-        color: 'black',
-        textAlign: 'center',
+    totalTime: {
+        backgroundColor: '#fff',
+        padding: 10,
+        position: 'absolute',
+        top: 20,
+        right: 5
+    },
+    icon: {
         flex: 1,
-        backgroundColor: 'green'
+        backgroundColor: 'white'
     }
 });
 

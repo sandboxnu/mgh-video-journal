@@ -11,6 +11,8 @@ export type BottomTabParamList = {
 
 export type TabOneParamList = {
   TabOneScreen: undefined;
+  Camera: undefined;
+  PrepareFace: undefined;
 };
 
 export type TabTwoParamList = {

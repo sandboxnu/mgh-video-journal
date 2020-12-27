@@ -9,6 +9,7 @@ export default {
           TabOne: {
             screens: {
               TabOneScreen: 'one',
+              CameraRecording: 'camera-recording'
             },
           },
           TabTwo: {

@@ -5,6 +5,8 @@ import * as React from 'react';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
+import CameraRecording from '../screens/CameraRecording';
+import PrepareFace from '../screens/PrepareFace';
 import TabOneScreen from '../screens/TabOneScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
@@ -54,6 +56,8 @@ function TabOneNavigator() {
         component={TabOneScreen}
         options={{ headerTitle: 'Tab One Title' }}
       />
+      <TabOneStack.Screen name="PrepareFace" component={PrepareFace} options={{headerShown: false}} />
+      <TabOneStack.Screen name="Camera" component={CameraRecording} options={{ headerShown: false}} />
     </TabOneStack.Navigator>
   );
 }

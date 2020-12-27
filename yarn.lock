@@ -3224,6 +3224,14 @@ expo-asset@~8.2.1:
     path-browserify "^1.0.0"
     url-parse "^1.4.4"
 
+expo-av@~8.7.0:
+  version "8.7.0"
+  resolved "https://registry.yarnpkg.com/expo-av/-/expo-av-8.7.0.tgz#01030256dc75cebd5d02060393ba0ad36c10a7f8"
+  integrity sha512-tYw0z//UZm9THicOsu4w0A7Olq/JauTy7kcBR15Fhyppd9wd8Jtq7QYNtf2igd1R+byS2L0AGwE0nazlbQR+Qw==
+  dependencies:
+    lodash "^4.17.15"
+    nullthrows "^1.1.0"
+
 expo-camera@~9.1.0:
   version "9.1.1"
   resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-9.1.1.tgz#8630012524b112bf7667ae7a85bbbca5a0911a24"
@@ -3248,6 +3256,11 @@ expo-error-recovery@~1.4.0:
   integrity sha512-NIXHe7oVfosFw/ZNZr9NBo5XJ6CmsGeK6ozldvN+RTSISmJmn+MZ3PAHuFZxLjCkOQe20J4g3S+F6aMkcD949Q==
   dependencies:
     fbjs "1.0.0"
+
+expo-face-detector@~8.4.0:
+  version "8.4.0"
+  resolved "https://registry.yarnpkg.com/expo-face-detector/-/expo-face-detector-8.4.0.tgz#696680bf8e90143538f85671827506ebf1482d30"
+  integrity sha512-XTzF6y9EirDU8xOINOGNQK7dBp0fqV7txUgAhfcHCHcKG0wdu9a8tXp5XkKFJLm9wyilOrBMpn/zq61n/FsIqw==
 
 expo-file-system@~9.3.0:
   version "9.3.0"

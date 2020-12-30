@@ -18,6 +18,12 @@ export default function MainScreen() {
       <EditScreenInfo path="/screens/TabOneScreen.tsx" />
       <Button
         onPress={() => {
+          navigation.navigate("PredictEpisodes");
+        }}
+        title={"Go to episode prediction"}
+      />
+      <Button
+        onPress={() => {
           navigation.navigate("PrepareFace");
         }}
         title={"Go to camera"}

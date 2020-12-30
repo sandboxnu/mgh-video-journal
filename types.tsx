@@ -7,4 +7,5 @@ export type MainStackParamList = {
   MainTab: undefined;
   Camera: undefined;
   PrepareFace: undefined;
+  PredictEpisodes: undefined;
 };

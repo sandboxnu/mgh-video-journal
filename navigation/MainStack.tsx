@@ -4,6 +4,7 @@ import CameraRecording from "../screens/CameraRecording";
 import PrepareFace from "../screens/PrepareFace";
 import MainScreen from "../screens/MainScreen";
 import { MainStackParamList } from "../types";
+import EpisodePrediction from "../screens/EpisodePrediction";
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
@@ -25,6 +26,11 @@ export default function MainNavigator() {
       <MainStack.Screen
         name="Camera"
         component={CameraRecording}
+        options={{ headerShown: false }}
+      />
+      <MainStack.Screen
+        name="PredictEpisodes"
+        component={EpisodePrediction}
         options={{ headerShown: false }}
       />
     </MainStack.Navigator>

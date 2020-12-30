@@ -3,6 +3,7 @@ import React, { FunctionComponent, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Text } from "../components/Themed";
 import { Ionicons } from "@expo/vector-icons";
+import { uploadFileToFirebase } from "../clients/firebaseInteractor";
 
 const CameraRecording: FunctionComponent = () => {
   const [recording, setRecording] = useState(false);
@@ -49,9 +50,8 @@ const CameraRecording: FunctionComponent = () => {
                   maxFileSize: 150000000,
                   quality: Camera.Constants.VideoQuality["480p"],
                 })
-                .then((vid) => {
-                  console.log(vid.uri);
-                  setRecording(false);
+                .then(async (vid) => {
+                  await uploadFileToFirebase("avocado.mov", vid.uri);
                 });
             } else if (camera && recording) {
               camera.stopRecording();

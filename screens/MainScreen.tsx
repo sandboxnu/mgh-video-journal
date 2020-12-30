@@ -1,12 +1,17 @@
 import { useNavigation } from "@react-navigation/native";
-import * as React from "react";
+import React, { useEffect } from "react";
 import { Button, StyleSheet } from "react-native";
+import { signIn } from "../clients/firebaseInteractor";
 
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
 
 export default function MainScreen() {
   let navigation = useNavigation();
+  useEffect(() => {
+    // The email gets ignored rn, but will be used when we get to the email auth
+    signIn("email");
+  }, []);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>My New</Text>

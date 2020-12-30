@@ -164,7 +164,7 @@ const continueButtonStyle = (hasOneValue: boolean) => ({
     justifyContent: "center",
     alignItems: "stretch",
     maxHeight: 60,
-  },
+  } as const,
 });
 
 const ThankYouScreenStyles = StyleSheet.create({

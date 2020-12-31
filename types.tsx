@@ -8,4 +8,15 @@ export type MainStackParamList = {
   Camera: undefined;
   PrepareFace: undefined;
   PredictEpisodes: undefined;
+  EpisodeInput: undefined;
+  EpisodeDisplay: undefined;
+};
+
+export type Episode = {
+  name: string;
+  date: string; // ISO String
+  startTime: number;
+  endTime: number;
+  initials: string;
+  recordingDay: number;
 };

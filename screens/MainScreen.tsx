@@ -33,6 +33,12 @@ export default function MainScreen() {
         }}
         title={"Go to camera"}
       />
+      <Button
+        onPress={() => {
+          navigation.navigate("EpisodeInput");
+        }}
+        title={"Go to Episode Input"}
+      />
     </View>
   );
 }

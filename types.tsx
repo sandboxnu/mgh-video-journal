@@ -10,6 +10,7 @@ export type MainStackParamList = {
   PredictEpisodes: undefined;
   EpisodeInput: undefined;
   EpisodeDisplay: undefined;
+  CameraFlow: undefined;
 };
 
 export type Episode = {

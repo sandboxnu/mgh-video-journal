@@ -29,7 +29,7 @@ export default function MainScreen() {
       />
       <Button
         onPress={() => {
-          navigation.navigate("PrepareFace");
+          navigation.navigate("CameraFlow");
         }}
         title={"Go to camera"}
       />

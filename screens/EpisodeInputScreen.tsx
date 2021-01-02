@@ -19,6 +19,7 @@ const CURRENT_DATE = new Date(
   0
 ).toISOString();
 
+let recordingDay: number = 1;
 const convertToMinutes = (time: Date) => {
   return time.getHours() * 60 + time.getMinutes();
 };
@@ -110,8 +111,6 @@ export default function EpisodeInputScreen() {
 
   const [episodes, setEpisodes] = useState<Episode[]>([]);
 
-  let recordingDay: number = 1;
-
   const putEpisodesInStoage = async () => {
     await AsyncStorage.setItem(
       STORAGE_KEYS.daysEpisodes(recordingDay),
@@ -151,9 +150,6 @@ export default function EpisodeInputScreen() {
   const hasError = !validateEpisode();
   const onMount = async () => {
     const startDay = await AsyncStorage.getItem(STORAGE_KEYS.start_day());
-    const todayEpisodes = await AsyncStorage.getItem(
-      STORAGE_KEYS.daysEpisodes(recordingDay)
-    );
     if (startDay === null) {
       // if the startDay hasn't been set, this is their first time on this page, so set it to the current date
       // current date is only based on year/month/date so the time will always be the same accross days
@@ -163,11 +159,13 @@ export default function EpisodeInputScreen() {
       // When you subtract them, it should only ever be 0 (same day), DAY_IN_MS (1 day later) or DAY_IN_MS * 2 (2 days later) since
       // current date and start day should always be the same time of day
       const msApart =
-        new Date(CURRENT_DATE).getMilliseconds() -
-        new Date(startDay).getMilliseconds();
+        new Date(CURRENT_DATE).getTime() - new Date(startDay).getTime();
       // Add one so it's standardixed as day 1, 2, or 3
       recordingDay = msApart / DAY_IN_MS + 1;
     }
+    const todayEpisodes = await AsyncStorage.getItem(
+      STORAGE_KEYS.daysEpisodes(recordingDay)
+    );
     if (todayEpisodes === null) {
       // if the todaysEpisodes hasn't been set, this is their first time on today so set it
       await AsyncStorage.setItem(

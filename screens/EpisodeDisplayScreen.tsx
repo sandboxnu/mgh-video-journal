@@ -80,7 +80,6 @@ const episodeStyles = StyleSheet.create({
 });
 
 export default function EpisodeDisplayScreen({ route }: any) {
-  let navigation = useNavigation();
   const { episodes } = route.params;
 
   return (

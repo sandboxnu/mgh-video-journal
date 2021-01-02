@@ -1,13 +1,14 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { Button, StyleSheet } from "react-native";
 import { signIn } from "../clients/firebaseInteractor";
 
 import EditScreenInfo from "../components/EditScreenInfo";
 import { Text, View } from "../components/Themed";
+import { useMainNavigation } from "../hooks/useMainNavigation";
+import { NavigationScreens } from "../navigation/MainNavigationContext";
 
 export default function MainScreen() {
-  let navigation = useNavigation();
+  let context = useMainNavigation();
   useEffect(() => {
     // The email gets ignored rn, but will be used when we get to the email auth
     signIn("email");
@@ -23,19 +24,7 @@ export default function MainScreen() {
       <EditScreenInfo path="/screens/TabOneScreen.tsx" />
       <Button
         onPress={() => {
-          navigation.navigate("PredictEpisodes");
-        }}
-        title={"Go to episode prediction"}
-      />
-      <Button
-        onPress={() => {
-          navigation.navigate("CameraFlow");
-        }}
-        title={"Go to camera"}
-      />
-      <Button
-        onPress={() => {
-          navigation.navigate("EpisodeInput");
+          context.navigate({ type: NavigationScreens.createEpisode });
         }}
         title={"Go to Episode Input"}
       />

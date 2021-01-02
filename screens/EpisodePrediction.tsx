@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { FunctionComponent, useState } from "react";
 import { ScrollView, StyleSheet, TextInput } from "react-native";
 import { View, Text, Button } from "../components/Themed";
@@ -9,7 +8,6 @@ function EvenSpacedView() {
 }
 
 const ThankYouScreen: FunctionComponent = () => {
-  let navigation = useNavigation();
   return (
     <View style={ThankYouScreenStyles.container}>
       <View style={ThankYouScreenStyles.titleView}>
@@ -24,17 +22,9 @@ const ThankYouScreen: FunctionComponent = () => {
         staff member here or by phone at 978 435 2207. {"\n\n"}
         Thank you again for taking the time to participate in our study. We know
         your time is valuable and we are grateful for your contributions to
-        science.
+        science. {"\n\n"}
+        You are now done for the day. We will see you again tomorrow!
       </Text>
-      <Button
-        style={ThankYouScreenStyles.button}
-        onPress={() => {
-          // Will follow with saving the predictions when the saving gets started in the episode recording
-          navigation.goBack();
-        }}
-      >
-        <Text style={styles.continueText}>Continue</Text>
-      </Button>
     </View>
   );
 };
@@ -112,7 +102,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 25,
     justifyContent: "space-between",
-    paddingRight: 50,
+    paddingRight: 24,
     paddingLeft: 24,
     paddingBottom: 25,
   },

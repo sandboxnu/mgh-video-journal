@@ -3,11 +3,7 @@ export type RootStackParamList = {
   NotFound: undefined;
 };
 
-export type MainStackParamList = {
-  MainTab: undefined;
-  Camera: undefined;
-  PrepareFace: undefined;
-  PredictEpisodes: undefined;
+export type EpisodeInputStackParamList = {
   EpisodeInput: undefined;
   EpisodeDisplay: undefined;
   CameraFlow: undefined;

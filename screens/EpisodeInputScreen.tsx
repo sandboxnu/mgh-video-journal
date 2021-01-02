@@ -7,6 +7,7 @@ import Icon from "react-native-vector-icons/Octicons";
 import { Episode } from "../types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { STORAGE_KEYS } from "../utils/AsyncStoageUtils";
+import { useMainNavigation } from "../hooks/useMainNavigation";
 
 // the length of a day in milliseconds
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
@@ -103,6 +104,7 @@ const datePickerStyles = StyleSheet.create({
 
 export default function EpisodeInputScreen() {
   let navigation = useNavigation();
+  let mainNavigation = useMainNavigation();
 
   const [episodeName, setEpisodeName] = useState("");
   const [initials, setInitials] = useState("");
@@ -111,11 +113,14 @@ export default function EpisodeInputScreen() {
 
   const [episodes, setEpisodes] = useState<Episode[]>([]);
 
-  const putEpisodesInStoage = async () => {
+  const putEpisodesInStorage = async (finished : boolean) => {
     await AsyncStorage.setItem(
       STORAGE_KEYS.daysEpisodes(recordingDay),
       JSON.stringify(episodes)
     );
+    if (finished) {
+      mainNavigation.navigate({ type: "recordEpisodes", episodes });
+    }
   };
 
   const createEpisode = () => {
@@ -130,7 +135,7 @@ export default function EpisodeInputScreen() {
       };
       episodes.push(newEpisode);
       setEpisodes(episodes);
-      putEpisodesInStoage();
+      putEpisodesInStorage(false);
       resetEpisodeInput();
     }
   };
@@ -254,7 +259,7 @@ export default function EpisodeInputScreen() {
           <Text style={styles.buttonText}>Add episode</Text>
         </Button>
         <Button
-          onPress={putEpisodesInStoage}
+          onPress={() => putEpisodesInStorage(true)}
           style={{ ...styles.buttonBlue, ...styles.button }}
         >
           <Text style={styles.buttonText}>Confirm episodes</Text>

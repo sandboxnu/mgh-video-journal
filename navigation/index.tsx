@@ -9,8 +9,9 @@ import { ColorSchemeName } from "react-native";
 
 import NotFoundScreen from "../screens/NotFoundScreen";
 import { RootStackParamList } from "../types";
-import MainNavigator from "./MainStack";
+import MainStack from "./MainStack";
 import LinkingConfiguration from "./LinkingConfiguration";
+import MainNavigator from "./MainNavigator";
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -24,28 +25,7 @@ export default function Navigation({
       linking={LinkingConfiguration}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
     >
-      <RootNavigator />
+      <MainNavigator />
     </NavigationContainer>
-  );
-}
-
-// A root stack navigator is often used for displaying modals on top of all other content
-// Read more here: https://reactnavigation.org/docs/modal
-const Stack = createStackNavigator<RootStackParamList>();
-
-function RootNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Root"
-        component={MainNavigator}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="NotFound"
-        component={NotFoundScreen}
-        options={{ title: "Oops!", headerShown: true }}
-      />
-    </Stack.Navigator>
   );
 }

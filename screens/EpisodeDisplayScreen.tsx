@@ -3,6 +3,7 @@ import React from "react";
 import { StyleSheet, ScrollView } from "react-native";
 import { Text, View } from "../components/Themed";
 import { Episode } from "../types";
+import { convertMinutesToTime } from "../utils/TimeUtils";
 
 interface EpisodeProps {
   episode: Episode;
@@ -10,14 +11,6 @@ interface EpisodeProps {
 }
 
 function EpisodeDisplay({ episode, index }: EpisodeProps) {
-  const convertMinutesToTime = (minutes: number) => {
-    const date = new Date(minutes * 60 * 1000);
-    return date.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-    });
-  };
-
   return (
     <View style={episodeStyles.container}>
       <View style={episodeStyles.numberContainer}>

@@ -2,12 +2,18 @@ import React, {
   FunctionComponent,
   ReactElement,
   useCallback,
+  useEffect,
   useState,
 } from "react";
 import { LayoutAnimation, Platform, StyleSheet, UIManager } from "react-native";
+import { signIn } from "../clients/firebaseInteractor";
 import { View, Text } from "../components/Themed";
+import { EpisodeListingOverview } from "../components/EpisodeListingOverview";
 import EpisodePredictionWrapper from "../screens/EpisodePrediction";
+import { EpisodeRecallOverview } from "../screens/EpisodeRecallOverview";
 import MainScreen from "../screens/MainScreen";
+import { Episode } from "../types";
+import { retrieveRecordingDay } from "../utils/TimeUtils";
 import CameraFlowNavigator from "./CameraFlowNavigator";
 import {
   MainNavigationContext,
@@ -15,11 +21,21 @@ import {
   NavigationState,
 } from "./MainNavigationContext";
 import EpisodeNavigator from "./MainStack";
+import { EpisodeOverlay } from "../components/EpisodeOverlay";
 
 const MainNavigator: FunctionComponent = () => {
   const [navigationState, setNavigationState] = useState<NavigationState>({
     type: NavigationScreens.intro,
   });
+  const [recordingDay, setRecordingDay] = useState(1);
+  const participantId = 1;
+
+  retrieveRecordingDay().then(setRecordingDay);
+
+  useEffect(() => {
+    // The email gets ignored rn, but will be used when we get to the email auth
+    signIn("email");
+  }, []);
 
   if (
     Platform.OS === "android" &&
@@ -35,19 +51,55 @@ const MainNavigator: FunctionComponent = () => {
     if (navigationState.type == NavigationScreens.intro) {
       return <MainScreen />;
     } else if (navigationState.type === "recordEpisodes") {
-      // Putting a default value into the overlay creator until we have the actual value
       return (
         <CameraFlowNavigator
           objects={navigationState.episodes}
-          overlayCreator={(episode) => (
-            <Text style={{ color: "white" }}>{episode.name}</Text>
+          overlayCreator={(episode: Episode, index: number) => (
+            <EpisodeOverlay episode={episode} index={index} />
           )}
+          nameCreator={(episode: Episode, index: number) =>
+            `${participantId}/${participantId}_${recordingDay}_${index}`
+          }
+          nextState={{ type: NavigationScreens.predictions }}
+          recordingDay={recordingDay}
         />
       );
     } else if (navigationState.type == NavigationScreens.createEpisode) {
       return <EpisodeNavigator />;
     } else if (navigationState.type == NavigationScreens.predictions) {
       return <EpisodePredictionWrapper />;
+    } else if (
+      navigationState.type == NavigationScreens.episodeRecallOverivew
+    ) {
+      return <EpisodeRecallOverview />;
+    } else if (navigationState.type == "episodeRecall") {
+      return (
+        <CameraFlowNavigator
+          objects={navigationState.episodes}
+          overlayCreator={(episode: Episode, index: number) => (
+            <EpisodeOverlay episode={episode} index={index} />
+          )}
+          nameCreator={(episode: Episode, index: number) =>
+            `${participantId}/${participantId}_${recordingDay}_${index}_recall`
+          }
+          nextState={{ type: NavigationScreens.createEpisode }}
+          recordingDay={recordingDay}
+        />
+      );
+    } else if (
+      navigationState.type == NavigationScreens.episodeListingOverview
+    ) {
+      return (
+        <CameraFlowNavigator
+          objects={[true]}
+          overlayCreator={(_) => <EpisodeListingOverview />}
+          nameCreator={() =>
+            `${participantId}/${participantId}_${recordingDay}_episodeListing`
+          }
+          nextState={{ type: NavigationScreens.episodeRecallOverivew }}
+          recordingDay={recordingDay}
+        />
+      );
     } else {
       return undefined;
     }

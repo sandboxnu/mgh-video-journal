@@ -19,5 +19,5 @@ export default {
   seeingFaceRectBorderColor: "#00A51A",
   notSeeingFaceRectBorderColor: "#A50000",
   disabledButtonColor: "#8D8D8D",
-  allowedButtonColor: "#0038FF",
+  allowedButtonColor: "#E16162",
 };

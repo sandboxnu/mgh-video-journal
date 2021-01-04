@@ -8,10 +8,13 @@ import React, {
 import { StyleSheet, View, Image } from "react-native";
 import { Button, Text } from "../components/Themed";
 import { uploadFileToFirebase } from "../clients/firebaseInteractor";
+import Colors from "../constants/Colors";
 
-const SavedOverlay: FunctionComponent<CameraRecordingProps> = ({
-  finished,
-}) => {
+export interface SavedOverlayProps {
+  finished: () => void;
+}
+
+const SavedOverlay: FunctionComponent<SavedOverlayProps> = ({ finished }) => {
   return (
     <View style={SavedOverlayViews.container}>
       <Text style={SavedOverlayViews.header}>
@@ -55,7 +58,7 @@ const SavedOverlayViews = StyleSheet.create({
     width: "90%",
     bottom: "10%",
     left: "5%",
-    backgroundColor: "#0038FF",
+    backgroundColor: Colors.allowedButtonColor,
   },
   buttonText: {
     color: "white",
@@ -65,7 +68,7 @@ const SavedOverlayViews = StyleSheet.create({
   },
 });
 
-const COUNTDOWN_TIME = 5;
+const COUNTDOWN_TIME = 10;
 // ~150MB
 const MAX_FILE_SIZE = 150000000;
 const FourEightyP = "480P";
@@ -73,11 +76,13 @@ const FourEightyP = "480P";
 export interface CameraRecordingProps {
   overlay: ReactElement;
   finished: () => void;
+  videoName: string;
 }
 
 const CameraRecording: FunctionComponent<CameraRecordingProps> = ({
   overlay,
   finished,
+  videoName,
 }) => {
   const [recording, setRecording] = useState(false);
   const [camera, setCamera] = useState<Camera | null>(null);
@@ -111,8 +116,7 @@ const CameraRecording: FunctionComponent<CameraRecordingProps> = ({
         quality: Camera.Constants.VideoQuality[FourEightyP],
       })
       .then((vid) => {
-        // TODO: Use actual name
-        uploadFileToFirebase("avocado.mov", vid.uri);
+        uploadFileToFirebase(`${videoName}.mov`, vid.uri);
         setRecording(false);
       });
   }
@@ -173,9 +177,7 @@ const CameraRecording: FunctionComponent<CameraRecordingProps> = ({
           </View>
         </>
       )}
-      {!shouldShowCamera && (
-        <SavedOverlay finished={finished} overlay={overlay} />
-      )}
+      {!shouldShowCamera && <SavedOverlay finished={finished} />}
     </View>
   );
 };
@@ -234,10 +236,10 @@ const Styles = StyleSheet.create({
     position: "absolute",
     width: "100%",
     height: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.76)",
+    backgroundColor: "rgba(0, 70, 67, .93)",
     top: 0,
     left: 0,
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "center",
   },
   beginText: {

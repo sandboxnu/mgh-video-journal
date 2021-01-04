@@ -1,6 +1,7 @@
 import React, { FunctionComponent } from "react";
 import { StyleSheet } from "react-native";
 import { View, Text, Button } from "../components/Themed";
+import Colors from "../constants/Colors";
 
 interface LetsStartRecordingProps {
   finished: () => void;
@@ -50,7 +51,7 @@ const Styles = StyleSheet.create({
   },
   button: {
     width: "100%",
-    backgroundColor: "#0038FF",
+    backgroundColor: Colors.allowedButtonColor,
     position: "absolute",
     bottom: "10%",
     left: "5%",

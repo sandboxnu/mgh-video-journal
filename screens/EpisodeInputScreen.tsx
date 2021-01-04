@@ -8,17 +8,8 @@ import { Episode } from "../types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { STORAGE_KEYS } from "../utils/AsyncStoageUtils";
 import { useMainNavigation } from "../hooks/useMainNavigation";
-
-// the length of a day in milliseconds
-const DAY_IN_MS = 24 * 60 * 60 * 1000;
-const EXACT_DATE = new Date();
-// standardized current date that does not factor in the time it was created, just the date
-const CURRENT_DATE = new Date(
-  EXACT_DATE.getFullYear(),
-  EXACT_DATE.getMonth(),
-  EXACT_DATE.getDate(),
-  0
-).toISOString();
+import { getCurrentDate, retrieveRecordingDay } from "../utils/TimeUtils";
+import Colors from "../constants/Colors";
 
 let recordingDay: number = 1;
 const convertToMinutes = (time: Date) => {
@@ -113,14 +104,31 @@ export default function EpisodeInputScreen() {
 
   const [episodes, setEpisodes] = useState<Episode[]>([]);
 
-  const putEpisodesInStorage = async (finished : boolean) => {
+  const putEpisodesInStorage = async (finished: boolean) => {
     await AsyncStorage.setItem(
       STORAGE_KEYS.daysEpisodes(recordingDay),
       JSON.stringify(episodes)
     );
     if (finished) {
       mainNavigation.navigate({ type: "recordEpisodes", episodes });
+      if ((await AsyncStorage.getItem(STORAGE_KEYS.episodeRecall())) === null) {
+        const randomEpisodes = selectRandomEpisodes();
+        await AsyncStorage.setItem(
+          STORAGE_KEYS.episodeRecall(),
+          JSON.stringify(randomEpisodes)
+        );
+      }
     }
+  };
+
+  const selectRandomEpisodes = () => {
+    const randomEpisodeInx = () => Math.floor(Math.random() * episodes.length);
+    const firstElement = randomEpisodeInx();
+    let secondElement = randomEpisodeInx();
+    while (firstElement === secondElement) {
+      secondElement = randomEpisodeInx();
+    }
+    return [episodes[firstElement], episodes[secondElement]];
   };
 
   const createEpisode = () => {
@@ -130,7 +138,7 @@ export default function EpisodeInputScreen() {
         initials,
         startTime: convertToMinutes(startTime!),
         endTime: convertToMinutes(endTime!),
-        date: CURRENT_DATE,
+        date: getCurrentDate(),
         recordingDay,
       };
       episodes.push(newEpisode);
@@ -154,20 +162,7 @@ export default function EpisodeInputScreen() {
 
   const hasError = !validateEpisode();
   const onMount = async () => {
-    const startDay = await AsyncStorage.getItem(STORAGE_KEYS.start_day());
-    if (startDay === null) {
-      // if the startDay hasn't been set, this is their first time on this page, so set it to the current date
-      // current date is only based on year/month/date so the time will always be the same accross days
-      await AsyncStorage.setItem(STORAGE_KEYS.start_day(), CURRENT_DATE);
-    } else {
-      // check which "day" it is for them (day 1, 2, 3) based on the start day.
-      // When you subtract them, it should only ever be 0 (same day), DAY_IN_MS (1 day later) or DAY_IN_MS * 2 (2 days later) since
-      // current date and start day should always be the same time of day
-      const msApart =
-        new Date(CURRENT_DATE).getTime() - new Date(startDay).getTime();
-      // Add one so it's standardixed as day 1, 2, or 3
-      recordingDay = msApart / DAY_IN_MS + 1;
-    }
+    recordingDay = await retrieveRecordingDay();
     const todayEpisodes = await AsyncStorage.getItem(
       STORAGE_KEYS.daysEpisodes(recordingDay)
     );
@@ -252,7 +247,7 @@ export default function EpisodeInputScreen() {
           disabled={!!hasError}
           onPress={hasError ? () => {} : createEpisode}
           style={{
-            ...(hasError ? styles.buttonGrey : styles.buttonBlue),
+            ...(hasError ? styles.buttonGrey : styles.buttonRed),
             ...styles.button,
           }}
         >
@@ -260,7 +255,11 @@ export default function EpisodeInputScreen() {
         </Button>
         <Button
           onPress={() => putEpisodesInStorage(true)}
-          style={{ ...styles.buttonBlue, ...styles.button }}
+          style={{
+            ...(episodes.length < 2 ? styles.buttonGrey : styles.buttonRed),
+            ...styles.button,
+          }}
+          disabled={episodes.length < 2}
         >
           <Text style={styles.buttonText}>Confirm episodes</Text>
         </Button>
@@ -356,8 +355,8 @@ const styles = StyleSheet.create({
   buttonGrey: {
     backgroundColor: "#8d8d8d",
   },
-  buttonBlue: {
-    backgroundColor: "#0038FF",
+  buttonRed: {
+    backgroundColor: Colors.allowedButtonColor,
   },
   buttonText: {
     color: "#FFFFFF",

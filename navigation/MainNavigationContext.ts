@@ -6,11 +6,19 @@ export enum NavigationScreens {
   intro,
   createEpisode,
   predictions,
+  episodeListingOverview,
+  episodeRecallOverivew,
 }
 
 // The state for when the episodes have been added, but need to be recorded
 interface NeedToRecordEpisodes {
   type: "recordEpisodes";
+  episodes: Episode[];
+}
+
+// The state for when the episodes have been added, but need to be recorded
+interface EpisodeRecall {
+  type: "episodeRecall";
   episodes: Episode[];
 }
 
@@ -29,7 +37,8 @@ interface BasicNavigationState {
 export type NavigationState =
   | BasicNavigationState
   | NeedToRecordEpisodes
-  | GivenPredictions;
+  | GivenPredictions
+  | EpisodeRecall;
 
 // The context to pass down the navigation updater function through
 export const MainNavigationContext = createContext((_: NavigationState) => {});

@@ -2,13 +2,15 @@ import React, { ReactElement, useState } from "react";
 import CameraRecording from "../screens/CameraRecording";
 import LetsStartRecording from "../screens/LetsStartRecording";
 import PrepareFace from "../screens/PrepareFace";
-import { Text } from "../components/Themed";
 import { useMainNavigation } from "../hooks/useMainNavigation";
-import { NavigationScreens } from "./MainNavigationContext";
+import { NavigationState } from "./MainNavigationContext";
 
 interface CameraFlowNavigatorProps<T> {
   objects: T[];
-  overlayCreator: (object: T) => ReactElement;
+  overlayCreator: (object: T, index: number) => ReactElement;
+  nameCreator: (object: T, index: number) => string;
+  nextState: NavigationState;
+  recordingDay: number;
 }
 
 enum CurrentScreen {
@@ -20,6 +22,9 @@ enum CurrentScreen {
 function CameraFlowNavigator<T>({
   objects,
   overlayCreator,
+  nameCreator,
+  nextState,
+  recordingDay,
 }: CameraFlowNavigatorProps<T>): ReactElement {
   let objectValues = objects;
   let overlayCreatorFunc = overlayCreator;
@@ -32,7 +37,7 @@ function CameraFlowNavigator<T>({
         <PrepareFace
           finished={() =>
             setCurrentState(
-              currentObjectIndex === 0
+              currentObjectIndex === 0 && recordingDay === 1
                 ? CurrentScreen.letsStart
                 : CurrentScreen.recording
             )
@@ -48,15 +53,22 @@ function CameraFlowNavigator<T>({
     case CurrentScreen.recording:
       return (
         <CameraRecording
-          overlay={overlayCreatorFunc(objectValues[currentObjectIndex])}
+          overlay={overlayCreatorFunc(
+            objectValues[currentObjectIndex],
+            currentObjectIndex
+          )}
           finished={() => {
             if (currentObjectIndex + 1 >= objectValues.length) {
-              navigation.navigate({ type: NavigationScreens.predictions });
+              navigation.navigate(nextState);
             } else {
               setCurrentObjectIndex(currentObjectIndex + 1);
               setCurrentState(CurrentScreen.prepareFace);
             }
           }}
+          videoName={nameCreator(
+            objectValues[currentObjectIndex],
+            currentObjectIndex
+          )}
         />
       );
   }

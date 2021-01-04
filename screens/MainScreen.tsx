@@ -26,7 +26,13 @@ export default function MainScreen() {
         onPress={() => {
           context.navigate({ type: NavigationScreens.createEpisode });
         }}
-        title={"Go to Episode Input"}
+        title={"Go to Day 1"}
+      />
+      <Button
+        onPress={() => {
+          context.navigate({ type: NavigationScreens.episodeListingOverview });
+        }}
+        title={"Go to Day 2"}
       />
     </View>
   );

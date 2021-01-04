@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import { Camera } from "expo-camera";
 import React, {
   FunctionComponent,
@@ -16,7 +15,7 @@ import {
 } from "react-native";
 import { Button, Text } from "../components/Themed";
 import Colors from "../constants/Colors";
-import LetsStartRecording from "./LetsStartRecording";
+import { continueButtonStyle } from "../utils/StylingUtils";
 
 const SpacingDiv = () => {
   return <View style={{ flex: 1 }} />;
@@ -47,10 +46,8 @@ const BottomInfoPrompt: FunctionComponent<
         <SpacingDiv />
         <Button
           style={{
+            ...continueButtonStyle(inScreen).style,
             ...BottomInfoPromptStyles.button,
-            backgroundColor: inScreen
-              ? Colors.allowedButtonColor
-              : Colors.disabledButtonColor,
           }}
           disabled={!inScreen}
           onPress={finished}
@@ -90,6 +87,9 @@ const BottomInfoPromptStyles = StyleSheet.create({
   button: {
     flex: 3,
     padding: 10,
+    justifyContent: undefined,
+    alignItems: undefined,
+    maxHeight: undefined,
   },
   buttonText: {
     flex: 1,

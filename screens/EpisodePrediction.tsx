@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState } from "react";
 import { ScrollView, StyleSheet, TextInput } from "react-native";
 import { View, Text, Button } from "../components/Themed";
-import Colors from "../constants/Colors";
+import { continueButtonStyle } from "../utils/StylingUtils";
 
 function EvenSpacedView() {
   return <View style={{ flex: 1 }} />;
@@ -145,19 +145,6 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
   },
-});
-
-const continueButtonStyle = (hasOneValue: boolean) => ({
-  style: {
-    backgroundColor: hasOneValue
-      ? Colors.allowedButtonColor
-      : Colors.disabledButtonColor,
-    flex: 1,
-    color: "white",
-    justifyContent: "center",
-    alignItems: "stretch",
-    maxHeight: 60,
-  } as const,
 });
 
 const ThankYouScreenStyles = StyleSheet.create({

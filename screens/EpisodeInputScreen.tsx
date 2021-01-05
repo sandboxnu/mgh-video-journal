@@ -1,6 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, TextInput, StyleProp, ViewStyle } from "react-native";
+import {
+  StyleSheet,
+  TextInput,
+  StyleProp,
+  ViewStyle,
+  Keyboard,
+} from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { Button, Text, View } from "../components/Themed";
 import Icon from "react-native-vector-icons/Octicons";
@@ -10,6 +16,7 @@ import { STORAGE_KEYS } from "../utils/AsyncStoageUtils";
 import { useMainNavigation } from "../hooks/useMainNavigation";
 import { getCurrentDate, retrieveRecordingDay } from "../utils/TimeUtils";
 import Colors from "../constants/Colors";
+import { TouchableWithoutFeedback } from "react-native";
 
 let recordingDay: number = 1;
 const convertToMinutes = (time: Date) => {
@@ -183,89 +190,92 @@ export default function EpisodeInputScreen() {
   }, []);
 
   return (
-    <View style={containerStyles.container}>
-      <View style={containerStyles.titleContainer}>
-        <Text style={styles.title}>Create an episode</Text>
-        <Icon
-          name="three-bars"
-          size={30}
-          color="#000"
-          onPress={() => {
-            navigation.navigate("EpisodeDisplay", { episodes });
-          }}
-        />
-      </View>
-      <View style={containerStyles.inputContainer}>
-        <View style={{ flex: 0.5 }} />
-        <View style={styles.input}>
-          <Text style={styles.inputHeader}>Episode Name</Text>
-          <TextInput
-            style={{ ...styles.inputContent, ...styles.textInput }}
-            maxLength={70}
-            onChangeText={setEpisodeName}
-            value={episodeName}
-            editable
+    // accessible = false allows the input form continue to be accessible through VoiceOver
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={containerStyles.container}>
+        <View style={containerStyles.titleContainer}>
+          <Text style={styles.title}>Create an episode</Text>
+          <Icon
+            name="three-bars"
+            size={30}
+            color="#000"
+            onPress={() => {
+              navigation.navigate("EpisodeDisplay", { episodes });
+            }}
           />
         </View>
-        <View style={styles.input}>
-          <Text style={styles.inputHeader}>{"Duration"}</Text>
-          <View style={{ ...styles.inputContent, ...styles.timePickers }}>
-            <TimePicker
-              style={styles.timePickerContainer}
-              time={startTime}
-              label="Start time"
-              setTime={setStartTime}
-            />
-            <View style={{ flex: 10 }} />
-            <TimePicker
-              style={styles.timePickerContainer}
-              time={endTime}
-              label="End time"
-              setTime={setEndTime}
+        <View style={containerStyles.inputContainer}>
+          <View style={{ flex: 0.5 }} />
+          <View style={styles.input}>
+            <Text style={styles.inputHeader}>Episode Name</Text>
+            <TextInput
+              style={{ ...styles.inputContent, ...styles.textInput }}
+              maxLength={70}
+              onChangeText={setEpisodeName}
+              value={episodeName}
+              editable
             />
           </View>
-        </View>
-        <View style={styles.input}>
-          <Text style={styles.inputText}>
-            Persons involved{" "}
-            <Text style={{ ...styles.inputText, ...styles.greyText }}>
-              (Optional)
+          <View style={styles.input}>
+            <Text style={styles.inputHeader}>{"Duration"}</Text>
+            <View style={{ ...styles.inputContent, ...styles.timePickers }}>
+              <TimePicker
+                style={styles.timePickerContainer}
+                time={startTime}
+                label="Start time"
+                setTime={setStartTime}
+              />
+              <View style={{ flex: 10 }} />
+              <TimePicker
+                style={styles.timePickerContainer}
+                time={endTime}
+                label="End time"
+                setTime={setEndTime}
+              />
+            </View>
+          </View>
+          <View style={styles.input}>
+            <Text style={styles.inputText}>
+              Persons involved{" "}
+              <Text style={{ ...styles.inputText, ...styles.greyText }}>
+                (Optional)
+              </Text>
             </Text>
-          </Text>
-          <TextInput
-            style={{ ...styles.inputContent, ...styles.textInput }}
-            maxLength={70}
-            onChangeText={setInitials}
-            value={initials}
-            editable
-          />
+            <TextInput
+              style={{ ...styles.inputContent, ...styles.textInput }}
+              maxLength={70}
+              onChangeText={setInitials}
+              value={initials}
+              editable
+            />
+          </View>
+          <View style={{ flex: 0.5 }} />
         </View>
-        <View style={{ flex: 0.5 }} />
+        <View style={containerStyles.buttonsContainer}>
+          <Button
+            disabled={!!hasError}
+            onPress={hasError ? () => {} : createEpisode}
+            style={{
+              ...(hasError ? styles.buttonGrey : styles.buttonRed),
+              ...styles.button,
+            }}
+          >
+            <Text style={styles.buttonText}>Add episode</Text>
+          </Button>
+          <Button
+            onPress={() => putEpisodesInStorage(true)}
+            style={{
+              ...(episodes.length < 2 ? styles.buttonGrey : styles.buttonRed),
+              ...styles.button,
+            }}
+            disabled={episodes.length < 2}
+          >
+            <Text style={styles.buttonText}>Confirm episodes</Text>
+          </Button>
+          <View style={{ flex: 2 }} />
+        </View>
       </View>
-      <View style={containerStyles.buttonsContainer}>
-        <Button
-          disabled={!!hasError}
-          onPress={hasError ? () => {} : createEpisode}
-          style={{
-            ...(hasError ? styles.buttonGrey : styles.buttonRed),
-            ...styles.button,
-          }}
-        >
-          <Text style={styles.buttonText}>Add episode</Text>
-        </Button>
-        <Button
-          onPress={() => putEpisodesInStorage(true)}
-          style={{
-            ...(episodes.length < 2 ? styles.buttonGrey : styles.buttonRed),
-            ...styles.button,
-          }}
-          disabled={episodes.length < 2}
-        >
-          <Text style={styles.buttonText}>Confirm episodes</Text>
-        </Button>
-        <View style={{ flex: 2 }} />
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 const containerStyles = StyleSheet.create({

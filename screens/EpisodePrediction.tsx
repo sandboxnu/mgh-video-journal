@@ -1,5 +1,11 @@
 import React, { FunctionComponent, useState } from "react";
-import { ScrollView, StyleSheet, TextInput } from "react-native";
+import {
+  Keyboard,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { View, Text, Button } from "../components/Themed";
 import { continueButtonStyle } from "../utils/StylingUtils";
 
@@ -49,51 +55,54 @@ const EpisodePrediction: FunctionComponent<EpisodePredictionProps> = ({
   const [predictions, setPredictions] = useState<string[]>([]);
   const [hasOneValue, setHasOneValue] = useState(false);
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>You are almost done!</Text>
-      <Text style={styles.subheader}>
-        Before you finish we would like you to tell us what you think your
-        episodes for tomorrow (Day 2) will be.
-      </Text>
-      <View style={{ flex: 7 }}>
-        <ScrollView style={styles.scrollView}>
-          {predictions.map((val, idx) => (
-            <TextInput
-              style={styles.textInput}
-              key={idx}
-              defaultValue={val}
-              placeholder="Enter episode title"
-              placeholderTextColor={styles.addEpisodeText.color}
-              onChangeText={(t) => {
-                predictions[idx] = t;
-                setPredictions(predictions);
-                setHasOneValue(predictions.some((val) => val !== ""));
+    // accessible = false allows the input form continue to be accessible through VoiceOver
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <Text style={styles.header}>You are almost done!</Text>
+        <Text style={styles.subheader}>
+          Before you finish we would like you to tell us what you think your
+          episodes for tomorrow (Day 2) will be.
+        </Text>
+        <View style={{ flex: 7 }}>
+          <ScrollView style={styles.scrollView}>
+            {predictions.map((val, idx) => (
+              <TextInput
+                style={styles.textInput}
+                key={idx}
+                defaultValue={val}
+                placeholder="Enter episode title"
+                placeholderTextColor={styles.addEpisodeText.color}
+                onChangeText={(t) => {
+                  predictions[idx] = t;
+                  setPredictions(predictions);
+                  setHasOneValue(predictions.some((val) => val !== ""));
+                }}
+              />
+            ))}
+            <Button
+              style={styles.addEpisodeButton}
+              onPress={() => {
+                setPredictions(predictions.concat([""]));
               }}
-            />
-          ))}
-          <Button
-            style={styles.addEpisodeButton}
-            onPress={() => {
-              setPredictions(predictions.concat([""]));
-            }}
-          >
-            <EvenSpacedView />
-            <Text style={styles.addEpisodeText}>+ Add Episode</Text>
-            <EvenSpacedView />
-          </Button>
-        </ScrollView>
+            >
+              <EvenSpacedView />
+              <Text style={styles.addEpisodeText}>+ Add Episode</Text>
+              <EvenSpacedView />
+            </Button>
+          </ScrollView>
+        </View>
+        <Button
+          style={continueButtonStyle(hasOneValue).style}
+          disabled={!hasOneValue}
+          onPress={() => {
+            // Will follow with saving the predictions when the saving gets started in the episode recording
+            onFinish();
+          }}
+        >
+          <Text style={styles.continueText}>Continue</Text>
+        </Button>
       </View>
-      <Button
-        style={continueButtonStyle(hasOneValue).style}
-        disabled={!hasOneValue}
-        onPress={() => {
-          // Will follow with saving the predictions when the saving gets started in the episode recording
-          onFinish();
-        }}
-      >
-        <Text style={styles.continueText}>Continue</Text>
-      </Button>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

@@ -9,6 +9,7 @@ import { StyleSheet, View, Image } from "react-native";
 import { Button, Text } from "../components/Themed";
 import { uploadFileToFirebase } from "../clients/firebaseInteractor";
 import Colors from "../constants/Colors";
+import { BlurView } from "expo-blur";
 
 export interface SavedOverlayProps {
   finished: () => void;
@@ -148,6 +149,7 @@ const CameraRecording: FunctionComponent<CameraRecordingProps> = ({
       )}
       {recording && (
         <>
+          <BlurView style={Styles.camera} intensity={100} />
           <View style={Styles.bottomRow}>
             <Button
               style={Styles.icon}
@@ -190,6 +192,9 @@ const Styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
+    position: "absolute",
+    top: 0,
+    left: 0,
     width: "100%",
     height: "100%",
   },

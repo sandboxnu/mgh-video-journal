@@ -30,6 +30,7 @@
     "expo": "~40.0.0",
     "expo-asset": "~8.2.1",
     "expo-av": "~8.7.0",
+    "expo-blur": "~8.2.2",
     "expo-camera": "~9.1.0",
     "expo-constants": "~9.3.0",
     "expo-face-detector": "~8.4.0",

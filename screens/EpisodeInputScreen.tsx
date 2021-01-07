@@ -80,11 +80,9 @@ function TimePicker({ time, setTime, label, style }: TimeProps) {
 
 const datePickerStyles = StyleSheet.create({
   timeButton: {
-    flex: 1,
     backgroundColor: "transparent",
   },
   contentWrapper: {
-    flex: 1,
     marginHorizontal: 15,
     flexDirection: "row",
     alignItems: "center",
@@ -97,6 +95,7 @@ const datePickerStyles = StyleSheet.create({
     fontStyle: "normal",
     fontSize: 18,
     lineHeight: 22,
+    paddingVertical: 15,
   },
 });
 
@@ -194,7 +193,12 @@ export default function EpisodeInputScreen() {
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
       <View style={containerStyles.container}>
         <View style={containerStyles.titleContainer}>
-          <Text style={styles.title}>Create an episode</Text>
+          <Text style={styles.title}>
+            Create an episode{"\n\n"}
+            <Text style={styles.inputHeader}>
+              Please enter at least two episodes
+            </Text>{" "}
+          </Text>
           <Icon
             name="three-bars"
             size={30}
@@ -282,25 +286,24 @@ const containerStyles = StyleSheet.create({
   container: {
     padding: 30,
     flex: 1,
+    justifyContent: "space-around",
   },
   titleContainer: {
-    flex: 1,
+    justifyContent: "space-between",
     flexDirection: "row",
-    alignItems: "flex-end",
+    alignItems: "flex-start",
+    marginTop: 30,
   },
   inputContainer: {
-    flex: 4,
     flexDirection: "column",
   },
   buttonsContainer: {
-    flex: 3,
     alignContent: "stretch",
   },
 });
 
 const styles = StyleSheet.create({
   title: {
-    flex: 1,
     fontFamily: "Inter_500Medium",
     fontStyle: "normal",
     fontSize: 30,
@@ -308,12 +311,10 @@ const styles = StyleSheet.create({
     textAlign: "left",
   },
   input: {
-    flex: 1,
     justifyContent: "center",
     marginTop: "2%",
   },
   inputHeader: {
-    flex: 1,
     fontFamily: "Arimo_400Regular",
     fontStyle: "normal",
     fontSize: 18,
@@ -321,7 +322,6 @@ const styles = StyleSheet.create({
     marginVertical: "2%",
   },
   inputText: {
-    flex: 1,
     fontFamily: "Arimo_400Regular",
     fontStyle: "normal",
     fontSize: 18,
@@ -332,7 +332,7 @@ const styles = StyleSheet.create({
     color: "#9c9c9c",
   },
   inputContent: {
-    flex: 2,
+    // flex: 2,
   },
   textInput: {
     borderWidth: 1,
@@ -342,8 +342,9 @@ const styles = StyleSheet.create({
     fontStyle: "normal",
     fontSize: 20,
     lineHeight: 22,
-    paddingHorizontal: 15,
     color: "#000000",
+
+    padding: 15,
   },
   timePickers: {
     flexDirection: "row",
@@ -357,10 +358,10 @@ const styles = StyleSheet.create({
     width: "45%",
   },
   button: {
-    flex: 1,
     marginVertical: "3%",
     justifyContent: "center",
     alignItems: "center",
+    height: 60,
   },
   buttonGrey: {
     backgroundColor: "#8d8d8d",

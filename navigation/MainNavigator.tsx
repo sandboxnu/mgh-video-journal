@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { LayoutAnimation, Platform, StyleSheet, UIManager } from "react-native";
 import { signIn } from "../clients/firebaseInteractor";
-import { View, Text } from "../components/Themed";
+import { View } from "../components/Themed";
 import { EpisodeListingOverview } from "../components/EpisodeListingOverview";
 import EpisodePredictionWrapper from "../screens/EpisodePrediction";
 import { EpisodeRecallOverview } from "../screens/EpisodeRecallOverview";

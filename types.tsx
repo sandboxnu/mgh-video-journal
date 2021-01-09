@@ -6,7 +6,8 @@ export type RootStackParamList = {
 export type EpisodeInputStackParamList = {
   EpisodeInput: undefined;
   EpisodeDisplay: undefined;
-  CameraFlow: undefined;
+  EpisodeConfirmation: undefined;
+  EpisodeEdit: undefined;
 };
 
 export type Episode = {

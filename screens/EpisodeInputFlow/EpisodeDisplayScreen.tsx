@@ -1,9 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { StyleSheet, ScrollView } from "react-native";
-import { Text, View } from "../components/Themed";
-import { Episode } from "../types";
-import { convertMinutesToTime } from "../utils/TimeUtils";
+import { Text, View } from "../../components/Themed";
+import { Episode } from "../../types";
+import { convertMinutesToTime } from "../../utils/TimeUtils";
 
 interface EpisodeProps {
   episode: Episode;

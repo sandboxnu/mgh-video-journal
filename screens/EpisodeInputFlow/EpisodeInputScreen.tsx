@@ -1,107 +1,24 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  TextInput,
-  StyleProp,
-  ViewStyle,
-  Keyboard,
-} from "react-native";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { Button, Text, View } from "../components/Themed";
+import { StyleSheet, TextInput, Keyboard } from "react-native";
+import { Button, Text, View } from "../../components/Themed";
 import Icon from "react-native-vector-icons/Octicons";
-import { Episode } from "../types";
+import { Episode } from "../../types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { STORAGE_KEYS } from "../utils/AsyncStoageUtils";
-import { useMainNavigation } from "../hooks/useMainNavigation";
-import { getCurrentDate, retrieveRecordingDay } from "../utils/TimeUtils";
-import Colors from "../constants/Colors";
+import { STORAGE_KEYS } from "../../utils/AsyncStoageUtils";
+import { getCurrentDate, retrieveRecordingDay } from "../../utils/TimeUtils";
+import Colors from "../../constants/Colors";
 import { TouchableWithoutFeedback } from "react-native";
+import { TimePicker } from "../../components/TimePicker";
+import { containerStyles, styles } from "./EpisodeInputCommonStyles";
 
 let recordingDay: number = 1;
 const convertToMinutes = (time: Date) => {
   return time.getHours() * 60 + time.getMinutes();
 };
 
-interface TimeProps {
-  time: Date | undefined;
-  setTime: (time: Date | undefined) => void;
-  label: string;
-  style: StyleProp<ViewStyle>;
-}
-
-function TimePicker({ time, setTime, label, style }: TimeProps) {
-  const [isVisible, setVisibility] = useState(false);
-  const handleConfirm = (
-    date: Date | undefined,
-    setTime: (time: Date | undefined) => void
-  ) => {
-    setTime(date);
-    hideDatePicker();
-  };
-
-  const showDatePicker = () => {
-    setVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setVisibility(false);
-  };
-  return (
-    <View style={style}>
-      <Button onPress={showDatePicker} style={datePickerStyles.timeButton}>
-        <View style={datePickerStyles.contentWrapper}>
-          <Text style={datePickerStyles.text}>
-            {time
-              ? time.toLocaleTimeString("en-US", {
-                  hour: "numeric",
-                  minute: "2-digit",
-                })
-              : label}
-          </Text>
-          <Icon
-            name="chevron-down"
-            size={20}
-            color="#000"
-            style={datePickerStyles.icon}
-          />
-        </View>
-      </Button>
-      <DateTimePickerModal
-        headerTextIOS={`Please enter the episode ${label.toLowerCase()}:`}
-        isVisible={isVisible}
-        mode="time"
-        onConfirm={(date) => handleConfirm(date, setTime)}
-        onCancel={hideDatePicker}
-      />
-    </View>
-  );
-}
-
-const datePickerStyles = StyleSheet.create({
-  timeButton: {
-    backgroundColor: "transparent",
-  },
-  contentWrapper: {
-    marginHorizontal: 15,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  icon: {
-    marginLeft: "auto",
-  },
-  text: {
-    fontFamily: "Arimo_400Regular",
-    fontStyle: "normal",
-    fontSize: 18,
-    lineHeight: 22,
-    paddingVertical: 15,
-  },
-});
-
 export default function EpisodeInputScreen() {
   let navigation = useNavigation();
-  let mainNavigation = useMainNavigation();
 
   const [episodeName, setEpisodeName] = useState("");
   const [initials, setInitials] = useState("");
@@ -116,25 +33,9 @@ export default function EpisodeInputScreen() {
       JSON.stringify(episodes)
     );
     if (finished) {
-      mainNavigation.navigate({ type: "recordEpisodes", episodes });
-      if ((await AsyncStorage.getItem(STORAGE_KEYS.episodeRecall())) === null) {
-        const randomEpisodes = selectRandomEpisodes();
-        await AsyncStorage.setItem(
-          STORAGE_KEYS.episodeRecall(),
-          JSON.stringify(randomEpisodes)
-        );
-      }
+      //@ts-ignore
+      navigation.replace("EpisodeConfirmation", { episodes, recordingDay });
     }
-  };
-
-  const selectRandomEpisodes = () => {
-    const randomEpisodeInx = () => Math.floor(Math.random() * episodes.length);
-    const firstElement = randomEpisodeInx();
-    let secondElement = randomEpisodeInx();
-    while (firstElement === secondElement) {
-      secondElement = randomEpisodeInx();
-    }
-    return [episodes[firstElement], episodes[secondElement]];
   };
 
   const createEpisode = () => {
@@ -211,9 +112,9 @@ export default function EpisodeInputScreen() {
         <View style={containerStyles.inputContainer}>
           <View style={{ flex: 0.5 }} />
           <View style={styles.input}>
-            <Text style={styles.inputHeader}>Episode Name</Text>
+            <Text style={styles.inputHeader}>Episode title</Text>
             <TextInput
-              style={{ ...styles.inputContent, ...styles.textInput }}
+              style={{ ...styles.textInput }}
               maxLength={70}
               onChangeText={setEpisodeName}
               value={episodeName}
@@ -222,7 +123,7 @@ export default function EpisodeInputScreen() {
           </View>
           <View style={styles.input}>
             <Text style={styles.inputHeader}>{"Duration"}</Text>
-            <View style={{ ...styles.inputContent, ...styles.timePickers }}>
+            <View style={{ ...styles.timePickers }}>
               <TimePicker
                 style={styles.timePickerContainer}
                 time={startTime}
@@ -246,7 +147,7 @@ export default function EpisodeInputScreen() {
               </Text>
             </Text>
             <TextInput
-              style={{ ...styles.inputContent, ...styles.textInput }}
+              style={{ ...styles.textInput }}
               maxLength={70}
               onChangeText={setInitials}
               value={initials}
@@ -282,98 +183,3 @@ export default function EpisodeInputScreen() {
     </TouchableWithoutFeedback>
   );
 }
-const containerStyles = StyleSheet.create({
-  container: {
-    padding: 30,
-    flex: 1,
-    justifyContent: "space-around",
-  },
-  titleContainer: {
-    justifyContent: "space-between",
-    flexDirection: "row",
-    alignItems: "flex-start",
-    marginTop: 30,
-  },
-  inputContainer: {
-    flexDirection: "column",
-  },
-  buttonsContainer: {
-    alignContent: "stretch",
-  },
-});
-
-const styles = StyleSheet.create({
-  title: {
-    fontFamily: "Inter_500Medium",
-    fontStyle: "normal",
-    fontSize: 30,
-    lineHeight: 36,
-    textAlign: "left",
-  },
-  input: {
-    justifyContent: "center",
-    marginTop: "2%",
-  },
-  inputHeader: {
-    fontFamily: "Arimo_400Regular",
-    fontStyle: "normal",
-    fontSize: 18,
-    lineHeight: 22,
-    marginVertical: "2%",
-  },
-  inputText: {
-    fontFamily: "Arimo_400Regular",
-    fontStyle: "normal",
-    fontSize: 18,
-    lineHeight: 22,
-    marginVertical: "2%",
-  },
-  greyText: {
-    color: "#9c9c9c",
-  },
-  inputContent: {
-    // flex: 2,
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: "#979797",
-    borderStyle: "solid",
-    fontFamily: "Arimo_400Regular",
-    fontStyle: "normal",
-    fontSize: 20,
-    lineHeight: 22,
-    color: "#000000",
-
-    padding: 15,
-  },
-  timePickers: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  timePickerContainer: {
-    borderWidth: 1,
-    borderColor: "#979797",
-    borderStyle: "solid",
-    flex: 150,
-    width: "45%",
-  },
-  button: {
-    marginVertical: "3%",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 60,
-  },
-  buttonGrey: {
-    backgroundColor: "#8d8d8d",
-  },
-  buttonRed: {
-    backgroundColor: Colors.allowedButtonColor,
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontFamily: "Inter_400Regular",
-    fontStyle: "normal",
-    fontSize: 20,
-    lineHeight: 22,
-  },
-});

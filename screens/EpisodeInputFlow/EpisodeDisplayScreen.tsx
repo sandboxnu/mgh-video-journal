@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, ScrollView } from "react-native";
 import { Text, View } from "../../components/Themed";
 import { Episode } from "../../types";
-import { convertMinutesToTime } from "../../utils/TimeUtils";
+import { convertToLocale } from "../../utils/TimeUtils";
 
 interface EpisodeProps {
   episode: Episode;
@@ -19,9 +19,9 @@ function EpisodeDisplay({ episode, index }: EpisodeProps) {
         <Text style={episodeStyles.episodeTitleText} numberOfLines={1}>
           {episode.name}
         </Text>
-        <Text style={episodeStyles.episodeInfoText}>{`${convertMinutesToTime(
+        <Text style={episodeStyles.episodeInfoText}>{`${convertToLocale(
           episode.startTime
-        )} - ${convertMinutesToTime(episode.endTime)}`}</Text>
+        )} - ${convertToLocale(episode.endTime)}`}</Text>
         <Text style={episodeStyles.episodeInfoText} numberOfLines={1}>{`with ${
           episode.initials.trim() || "N/A"
         }`}</Text>

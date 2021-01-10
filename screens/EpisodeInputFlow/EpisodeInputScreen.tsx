@@ -1,21 +1,17 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { StyleSheet, TextInput, Keyboard } from "react-native";
+import { TextInput, Keyboard } from "react-native";
 import { Button, Text, View } from "../../components/Themed";
 import Icon from "react-native-vector-icons/Octicons";
 import { Episode } from "../../types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { STORAGE_KEYS } from "../../utils/AsyncStoageUtils";
 import { getCurrentDate, retrieveRecordingDay } from "../../utils/TimeUtils";
-import Colors from "../../constants/Colors";
 import { TouchableWithoutFeedback } from "react-native";
 import { TimePicker } from "../../components/TimePicker";
 import { containerStyles, styles } from "./EpisodeInputCommonStyles";
 
 let recordingDay: number = 1;
-const convertToMinutes = (time: Date) => {
-  return time.getHours() * 60 + time.getMinutes();
-};
 
 export default function EpisodeInputScreen() {
   let navigation = useNavigation();
@@ -43,8 +39,8 @@ export default function EpisodeInputScreen() {
       const newEpisode: Episode = {
         name: episodeName,
         initials,
-        startTime: convertToMinutes(startTime!),
-        endTime: convertToMinutes(endTime!),
+        startTime: startTime!.toISOString(),
+        endTime: endTime!.toISOString(),
         date: getCurrentDate(),
         recordingDay,
       };

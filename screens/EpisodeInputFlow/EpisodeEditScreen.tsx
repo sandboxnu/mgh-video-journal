@@ -1,17 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import { TextInput } from "react-native";
 import { Button, Text, View } from "../../components/Themed";
 import { Episode } from "../../types";
-import { convertMinutesToDate, getCurrentDate } from "../../utils/TimeUtils";
-import Colors from "../../constants/Colors";
+import { getCurrentDate } from "../../utils/TimeUtils";
 import { TimePicker } from "../../components/TimePicker";
 import { containerStyles, styles } from "./EpisodeInputCommonStyles";
 
 let recordingDay: number = 1;
-const convertToMinutes = (time: Date) => {
-  return time.getHours() * 60 + time.getMinutes();
-};
 
 interface EpisodeEditProps {
   episode: Episode;
@@ -26,10 +22,10 @@ export default function EpisodeEditScreen({ route }: any) {
   const [episodeName, setEpisodeName] = useState(episode.name);
   const [initials, setInitials] = useState(episode.initials);
   const [startTime, setStartTime] = useState<Date | undefined>(
-    convertMinutesToDate(episode.startTime)
+    new Date(episode.startTime)
   );
   const [endTime, setEndTime] = useState<Date | undefined>(
-    convertMinutesToDate(episode.endTime)
+    new Date(episode.endTime)
   );
 
   const saveEpisode = () => {
@@ -37,8 +33,8 @@ export default function EpisodeEditScreen({ route }: any) {
       const newEpisode: Episode = {
         name: episodeName,
         initials,
-        startTime: convertToMinutes(startTime!),
-        endTime: convertToMinutes(endTime!),
+        startTime: startTime!.toISOString(),
+        endTime: endTime!.toISOString(),
         date: getCurrentDate(),
         recordingDay,
       };

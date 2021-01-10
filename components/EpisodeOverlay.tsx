@@ -1,7 +1,7 @@
-import React, { useState, FunctionComponent } from "react";
+import React, { FunctionComponent } from "react";
 import { StyleSheet } from "react-native";
 import { Episode } from "../types";
-import { convertMinutesToTime } from "../utils/TimeUtils";
+import { convertToLocale } from "../utils/TimeUtils";
 import { View, Text } from "./Themed";
 
 interface EpisodeOverlayProps {
@@ -23,11 +23,9 @@ export const EpisodeOverlay: FunctionComponent<EpisodeOverlayProps> = ({
       </View>
       <View style={episodeOverlayStyles.detailContainer}>
         <Text style={episodeOverlayStyles.episodeDetailTitle}>Time</Text>
-        <Text
-          style={episodeOverlayStyles.episodeDetails}
-        >{`${convertMinutesToTime(episode.startTime)} - ${convertMinutesToTime(
-          episode.endTime
-        )}`}</Text>
+        <Text style={episodeOverlayStyles.episodeDetails}>{`${convertToLocale(
+          episode.startTime
+        )} - ${convertToLocale(episode.endTime)}`}</Text>
       </View>
       <View style={episodeOverlayStyles.detailContainer}>
         <Text style={episodeOverlayStyles.episodeDetailTitle}>

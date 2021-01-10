@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect } from "react";
 import { Button, StyleSheet } from "react-native";
 import { signIn } from "../clients/firebaseInteractor";
@@ -33,6 +34,12 @@ export default function MainScreen() {
           context.navigate({ type: NavigationScreens.episodeListingOverview });
         }}
         title={"Go to Day 2"}
+      />
+      <Button
+        onPress={() => {
+          AsyncStorage.clear();
+        }}
+        title={"Clear Local Storage"}
       />
     </View>
   );

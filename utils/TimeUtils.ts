@@ -36,13 +36,9 @@ export const retrieveRecordingDay = async () => {
   }
 };
 
-export const convertMinutesToDate = (minutes: number) =>
-  new Date(minutes * 60 * 1000);
-
-export const convertMinutesToTime = (minutes: number) => {
-  return convertMinutesToDate(minutes).toLocaleTimeString("en-US", {
+export const convertToLocale = (iso: string): string => {
+  return new Date(iso).toLocaleTimeString("en-US", {
     hour: "numeric",
     minute: "2-digit",
-    timeZone: "UTC",
   });
 };

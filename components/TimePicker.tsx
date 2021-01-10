@@ -3,6 +3,7 @@ import { Button, Text, View } from "./Themed";
 import Icon from "react-native-vector-icons/Octicons";
 import { StyleProp, ViewStyle, StyleSheet } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { convertToLocale } from "../utils/TimeUtils";
 
 interface TimeProps {
   time: Date | undefined;
@@ -30,13 +31,7 @@ export function TimePicker({ time, setTime, label, style }: TimeProps) {
       <Button onPress={showDatePicker} style={datePickerStyles.timeButton}>
         <View style={datePickerStyles.contentWrapper}>
           <Text style={datePickerStyles.text}>
-            {time
-              ? time.toLocaleTimeString("en-US", {
-                  hour: "numeric",
-                  minute: "2-digit",
-                  timeZone: "UTC",
-                })
-              : label}
+            {time ? convertToLocale(time.toISOString()) : label}
           </Text>
           <Icon
             name="chevron-down"

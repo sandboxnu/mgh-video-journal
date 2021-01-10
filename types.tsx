@@ -13,8 +13,8 @@ export type EpisodeInputStackParamList = {
 export type Episode = {
   name: string;
   date: string; // ISO String
-  startTime: number;
-  endTime: number;
+  startTime: string; // ISO String
+  endTime: string; // ISO String
   initials: string;
   recordingDay: number;
 };

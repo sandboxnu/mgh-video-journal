@@ -21,4 +21,6 @@ export default {
   disabledButtonColor: "#8D8D8D",
   allowedButtonColor: "#E16162",
   avocadoGreen: "#004643",
+  textInputBorder: "#DCDCDC",
+  textInputFill: "#FBFBFB",
 };

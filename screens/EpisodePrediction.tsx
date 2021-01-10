@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import React, { FunctionComponent, useState } from "react";
 import {
   Keyboard,
@@ -7,6 +8,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import { View, Text, Button } from "../components/Themed";
+import Colors from "../constants/Colors";
 import { continueButtonStyle } from "../utils/StylingUtils";
 
 function EvenSpacedView() {
@@ -66,18 +68,30 @@ const EpisodePrediction: FunctionComponent<EpisodePredictionProps> = ({
         <View style={{ flex: 7 }}>
           <ScrollView style={styles.scrollView}>
             {predictions.map((val, idx) => (
-              <TextInput
-                style={styles.textInput}
-                key={idx}
-                defaultValue={val}
-                placeholder="Enter episode title"
-                placeholderTextColor={styles.addEpisodeText.color}
-                onChangeText={(t) => {
-                  predictions[idx] = t;
-                  setPredictions(predictions);
-                  setHasOneValue(predictions.some((val) => val !== ""));
-                }}
-              />
+              <View style={styles.textInputWrapper} key={idx}>
+                <TextInput
+                  style={styles.textInput}
+                  defaultValue={val}
+                  placeholder="Enter episode title"
+                  placeholderTextColor={styles.addEpisodeText.color}
+                  onChangeText={(t) => {
+                    predictions[idx] = t;
+                    setPredictions(predictions);
+                    setHasOneValue(predictions.some((val) => val !== ""));
+                  }}
+                />
+                <Ionicons
+                  name="add"
+                  style={styles.icon}
+                  color={Colors.avocadoGreen}
+                  size={25}
+                  onPress={() => {
+                    predictions.splice(idx, 1);
+                    setPredictions(predictions);
+                    setHasOneValue(predictions.some((val) => val !== ""));
+                  }}
+                />
+              </View>
             ))}
             <Button
               style={styles.addEpisodeButton}
@@ -110,49 +124,70 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 25,
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     paddingRight: 24,
     paddingLeft: 24,
     paddingBottom: 25,
   },
   header: {
-    flex: 1,
     fontSize: 30,
     paddingTop: 20,
+    color: Colors.avocadoGreen,
+    fontFamily: "Arimo_400Regular",
+    paddingBottom: 15,
   },
   subheader: {
-    flex: 1,
     fontSize: 18,
+    color: Colors.avocadoGreen,
+    fontFamily: "Arimo_400Regular",
+    paddingBottom: 20,
   },
   scrollView: {
     marginTop: 5,
     marginBottom: 5,
   },
   textInput: {
-    borderColor: "#000",
+    textAlign: "left",
+    paddingLeft: 15,
+    fontFamily: "Arimo_400Regular",
+    fontSize: 18,
+    color: Colors.avocadoGreen,
+    flex: 1,
+  },
+  textInputWrapper: {
+    borderColor: Colors.textInputBorder,
     borderWidth: 1,
-    textAlign: "center",
+    borderRadius: 10,
     height: 52,
     marginBottom: 10,
+    backgroundColor: Colors.textInputFill,
+    justifyContent: "space-between",
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
   },
   addEpisodeButton: {
     height: 52,
-    borderColor: "#9C9C9C",
+    borderColor: Colors.textInputBorder,
     borderWidth: 1,
     borderStyle: "dashed",
     backgroundColor: "white",
     textAlign: "center",
-    justifyContent: "center",
-    alignItems: "stretch",
+    fontSize: 18,
+    fontFamily: "Arimo_400Regular",
   },
   addEpisodeText: {
     flex: 1,
-    color: "#9C9C9C",
+    color: Colors.textInputBorder,
     textAlign: "center",
   },
   continueText: {
     color: "white",
     textAlign: "center",
+  },
+  icon: {
+    transform: [{ rotate: "45deg" }],
+    marginHorizontal: 10,
   },
 });
 
@@ -167,6 +202,9 @@ const ThankYouScreenStyles = StyleSheet.create({
     flex: 1,
     fontSize: 40,
     textAlign: "left",
+    color: Colors.avocadoGreen,
+    fontFamily: "Arimo_700Bold",
+    lineHeight: 48.4,
   },
   container: {
     ...styles.container,
@@ -176,10 +214,37 @@ const ThankYouScreenStyles = StyleSheet.create({
     flex: 5,
     fontWeight: "400",
     fontSize: 18,
+    fontFamily: "Arimo_400Regular",
+    color: Colors.avocadoGreen,
   },
   button: {
     ...continueButtonStyle(true).style,
     maxHeight: 60,
+  },
+});
+
+const FinalScreen = () => {
+  return (
+    <View style={FinalScreenStyles.container}>
+      <Text style={FinalScreenStyles.text}>
+        Your diary for today has been saved! {"\n\n"} You may now exit the
+        application.
+      </Text>
+    </View>
+  );
+};
+
+const FinalScreenStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.avocadoGreen,
+    justifyContent: "center",
+  },
+  text: {
+    color: "white",
+    fontSize: 18,
+    fontFamily: "Arimo_400Regular",
+    textAlign: "center",
   },
 });
 

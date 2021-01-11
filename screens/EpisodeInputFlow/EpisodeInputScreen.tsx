@@ -5,7 +5,7 @@ import { Button, Text, View } from "../../components/Themed";
 import Icon from "react-native-vector-icons/Octicons";
 import { Episode } from "../../types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { STORAGE_KEYS } from "../../utils/AsyncStoageUtils";
+import { STORAGE_KEYS } from "../../utils/AsyncStorageUtils";
 import { getCurrentDate, retrieveRecordingDay } from "../../utils/TimeUtils";
 import { TouchableWithoutFeedback } from "react-native";
 import { TimePicker } from "../../components/TimePicker";
@@ -41,7 +41,7 @@ export default function EpisodeInputScreen() {
         initials,
         startTime: startTime!.toISOString(),
         endTime: endTime!.toISOString(),
-        date: getCurrentDate(),
+        date: getCurrentDate().toISOString(),
         recordingDay,
       };
       episodes.push(newEpisode);

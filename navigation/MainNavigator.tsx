@@ -13,7 +13,7 @@ import EpisodePredictionWrapper from "../screens/EpisodePrediction";
 import { EpisodeRecallOverview } from "../screens/EpisodeRecallOverview";
 import MainScreen from "../screens/MainScreen";
 import { Episode } from "../types";
-import { retrieveRecordingDay } from "../utils/TimeUtils";
+import { getCurrentDate, retrieveRecordingDay } from "../utils/TimeUtils";
 import CameraFlowNavigator from "./CameraFlowNavigator";
 import {
   MainNavigationContext,
@@ -24,13 +24,21 @@ import EpisodeNavigator from "./MainStack";
 import { EpisodeOverlay } from "../components/EpisodeOverlay";
 import Colors from "../constants/Colors";
 import { EpisodeRecallOverlay } from "../components/EpisodeRecallOverlay";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { STORAGE_KEYS } from "../utils/AsyncStorageUtils";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import { EpisodeRecallFinished } from "../screens/EpisodeRecallFinished";
 
-const MainNavigator: FunctionComponent = () => {
-  const [navigationState, setNavigationState] = useState<NavigationState>({
-    type: NavigationScreens.intro,
-  });
+interface MainNavigatorProps {
+  startingState: NavigationState;
+}
+const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
+  startingState,
+}) => {
+  // If you want to test a specific flow, update this startingState to be wherever you want to go to
+  const [navigationState, setNavigationState] = useState<NavigationState>(
+    startingState
+  );
   const [recordingDay, setRecordingDay] = useState(1);
   const participantId = 1;
 
@@ -40,6 +48,16 @@ const MainNavigator: FunctionComponent = () => {
     // The email gets ignored rn, but will be used when we get to the email auth
     signIn("email");
   }, []);
+
+  useEffect(() => {
+    AsyncStorage.setItem(
+      STORAGE_KEYS.currentState(),
+      JSON.stringify({
+        state: navigationState,
+        date: getCurrentDate(),
+      })
+    );
+  }, [navigationState]);
 
   if (
     Platform.OS === "android" &&
@@ -74,7 +92,7 @@ const MainNavigator: FunctionComponent = () => {
     } else if (navigationState.type == NavigationScreens.predictions) {
       return <EpisodePredictionWrapper />;
     } else if (
-      navigationState.type == NavigationScreens.episodeRecallOverivew
+      navigationState.type == NavigationScreens.episodeRecallOverview
     ) {
       return <EpisodeRecallOverview />;
     } else if (navigationState.type == "episodeRecall") {
@@ -107,7 +125,7 @@ const MainNavigator: FunctionComponent = () => {
           nameCreator={() =>
             `${participantId}/${participantId}_Day${recordingDay}_episodeListing`
           }
-          nextState={{ type: NavigationScreens.episodeRecallOverivew }}
+          nextState={{ type: NavigationScreens.episodeRecallOverview }}
           recordingDay={recordingDay}
         />
       );

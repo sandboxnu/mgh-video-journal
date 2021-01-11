@@ -3,7 +3,7 @@ import { View, Text, Button } from "../components/Themed";
 import { StyleSheet } from "react-native";
 import { continueButtonStyle } from "../utils/StylingUtils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { STORAGE_KEYS } from "../utils/AsyncStoageUtils";
+import { STORAGE_KEYS } from "../utils/AsyncStorageUtils";
 import { useMainNavigation } from "../hooks/useMainNavigation";
 import Colors from "../constants/Colors";
 

@@ -7,7 +7,7 @@ export enum NavigationScreens {
   createEpisode,
   predictions,
   episodeListingOverview,
-  episodeRecallOverivew,
+  episodeRecallOverview,
   onboarding,
   episodeRecallFinished,
 }

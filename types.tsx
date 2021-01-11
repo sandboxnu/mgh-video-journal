@@ -1,6 +1,13 @@
+import { NavigationState } from "./navigation/MainNavigationContext";
+
 export type RootStackParamList = {
   Root: undefined;
   NotFound: undefined;
+};
+
+export type AppStateStorage = {
+  date: Date;
+  state: NavigationState;
 };
 
 export type EpisodeInputStackParamList = {

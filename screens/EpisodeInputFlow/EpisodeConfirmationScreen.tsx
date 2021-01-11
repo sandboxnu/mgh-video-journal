@@ -8,7 +8,7 @@ import { continueButtonStyle } from "../../utils/StylingUtils";
 import { useMainNavigation } from "../../hooks/useMainNavigation";
 import Colors from "../../constants/Colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { STORAGE_KEYS } from "../../utils/AsyncStoageUtils";
+import { STORAGE_KEYS } from "../../utils/AsyncStorageUtils";
 import { convertToLocale } from "../../utils/TimeUtils";
 
 interface EpisodeProps {

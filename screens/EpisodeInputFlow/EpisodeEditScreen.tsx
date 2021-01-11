@@ -35,7 +35,7 @@ export default function EpisodeEditScreen({ route }: any) {
         initials,
         startTime: startTime!.toISOString(),
         endTime: endTime!.toISOString(),
-        date: getCurrentDate(),
+        date: getCurrentDate().toISOString(),
         recordingDay,
       };
       navigation.navigate("EpisodeConfirmation", {

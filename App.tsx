@@ -1,21 +1,102 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+} from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect, useState } from "react";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
-import Navigation from './navigation';
+import useCachedResources from "./hooks/useCachedResources";
+import useColorScheme from "./hooks/useColorScheme";
+import MainNavigator from "./navigation/MainNavigator";
+import LinkingConfiguration from "./navigation/LinkingConfiguration";
+import { NavigationScreens } from "./navigation/MainNavigationContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { STORAGE_KEYS } from "./utils/AsyncStorageUtils";
+import { AppStateStorage } from "./types";
+import {
+  areDaysEqual,
+  getCurrentDate,
+  retrieveRecordingDay,
+} from "./utils/TimeUtils";
+import { AppState } from "react-native";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
+  const [startingState, setStartingState] = useState<AppStateStorage | null>(
+    null
+  );
 
-  if (!isLoadingComplete) {
+  // When getting the state from async storage, the date property is still stored as a string. This fixes that
+  const fixDates = (state: AppStateStorage): AppStateStorage => {
+    return {
+      ...state,
+      date: new Date(state.date),
+    };
+  };
+
+  const validateCurrentDayOrGoToNext = async (
+    appStorage: AppStateStorage
+  ): Promise<AppStateStorage> => {
+    // If the days are equal from what is on disk, then do nothing. The interesting case is when the days change
+    if (areDaysEqual(appStorage.date, getCurrentDate())) {
+      return appStorage;
+    } else {
+      const recordingDay = await retrieveRecordingDay();
+      if (recordingDay == 2) {
+        return {
+          state: { type: NavigationScreens.episodeRecallOverview },
+          date: getCurrentDate(),
+        };
+      } else if (recordingDay == 3) {
+        // Right now these are the same, but at some point I am assuming that we will want to go to have a different thing on day 3
+        return {
+          state: { type: NavigationScreens.episodeRecallOverview },
+          date: getCurrentDate(),
+        };
+      } else {
+        // In the future, we will want to go to a screen with a clear button, but for now (for testing), stay at the episode recall screen
+        return {
+          state: { type: NavigationScreens.episodeRecallOverview },
+          date: getCurrentDate(),
+        };
+      }
+    }
+  };
+
+  const updateCurrentState = async () => {
+    AsyncStorage.getItem(STORAGE_KEYS.currentState())
+      .then((value) =>
+        value != null
+          ? JSON.parse(value)
+          : { state: { type: NavigationScreens.intro }, date: getCurrentDate() }
+      )
+      .then(fixDates)
+      .then(validateCurrentDayOrGoToNext)
+      .then(setStartingState);
+  };
+
+  useEffect(() => {
+    updateCurrentState();
+    const listenerHandler = (_: any) => updateCurrentState();
+    // Whenever the app changes state, we update our state
+    AppState.addEventListener("change", listenerHandler);
+    return () => AppState.removeEventListener("change", listenerHandler);
+  }, []);
+
+  if (!isLoadingComplete || startingState === null) {
     return null;
   } else {
     return (
       <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
+        <NavigationContainer
+          linking={LinkingConfiguration}
+          theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+        >
+          <MainNavigator startingState={startingState.state} />
+        </NavigationContainer>
         <StatusBar />
       </SafeAreaProvider>
     );

@@ -22,6 +22,8 @@ import {
 } from "./MainNavigationContext";
 import EpisodeNavigator from "./MainStack";
 import { EpisodeOverlay } from "../components/EpisodeOverlay";
+import Colors from "../constants/Colors";
+import { EpisodeRecallOverlay } from "../components/EpisodeRecallOverlay";
 
 const MainNavigator: FunctionComponent = () => {
   const [navigationState, setNavigationState] = useState<NavigationState>({
@@ -54,11 +56,12 @@ const MainNavigator: FunctionComponent = () => {
       return (
         <CameraFlowNavigator
           objects={navigationState.episodes}
+          overlayBackgroundColor={Colors.darkOverlay}
           overlayCreator={(episode: Episode, index: number) => (
             <EpisodeOverlay episode={episode} index={index} />
           )}
           nameCreator={(episode: Episode, index: number) =>
-            `${participantId}/${participantId}_${recordingDay}_${index}`
+            `${participantId}/${participantId}_Day${recordingDay}_Episode${index}`
           }
           nextState={{ type: NavigationScreens.predictions }}
           recordingDay={recordingDay}
@@ -76,11 +79,12 @@ const MainNavigator: FunctionComponent = () => {
       return (
         <CameraFlowNavigator
           objects={navigationState.episodes}
-          overlayCreator={(episode: Episode, index: number) => (
-            <EpisodeOverlay episode={episode} index={index} />
+          overlayBackgroundColor={Colors.lightOverlay}
+          overlayCreator={(episode: Episode) => (
+            <EpisodeRecallOverlay episode={episode} />
           )}
-          nameCreator={(episode: Episode, index: number) =>
-            `${participantId}/${participantId}_${recordingDay}_${index}_recall`
+          nameCreator={(_, index: number) =>
+            `${participantId}/${participantId}_Day${recordingDay}_Episode${index}_recall`
           }
           nextState={{ type: NavigationScreens.createEpisode }}
           recordingDay={recordingDay}
@@ -92,9 +96,10 @@ const MainNavigator: FunctionComponent = () => {
       return (
         <CameraFlowNavigator
           objects={[true]}
+          overlayBackgroundColor={Colors.darkOverlay}
           overlayCreator={(_) => <EpisodeListingOverview />}
           nameCreator={() =>
-            `${participantId}/${participantId}_${recordingDay}_episodeListing`
+            `${participantId}/${participantId}_Day${recordingDay}_episodeListing`
           }
           nextState={{ type: NavigationScreens.episodeRecallOverivew }}
           recordingDay={recordingDay}

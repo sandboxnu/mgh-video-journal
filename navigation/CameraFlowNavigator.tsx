@@ -11,6 +11,7 @@ interface CameraFlowNavigatorProps<T> {
   nameCreator: (object: T, index: number) => string;
   nextState: NavigationState;
   recordingDay: number;
+  overlayBackgroundColor: string;
 }
 
 enum CurrentScreen {
@@ -25,6 +26,7 @@ function CameraFlowNavigator<T>({
   nameCreator,
   nextState,
   recordingDay,
+  overlayBackgroundColor,
 }: CameraFlowNavigatorProps<T>): ReactElement {
   let objectValues = objects;
   let overlayCreatorFunc = overlayCreator;
@@ -53,6 +55,7 @@ function CameraFlowNavigator<T>({
     case CurrentScreen.recording:
       return (
         <CameraRecording
+          overlayBackgroundColor={overlayBackgroundColor}
           overlay={overlayCreatorFunc(
             objectValues[currentObjectIndex],
             currentObjectIndex

@@ -23,4 +23,6 @@ export default {
   avocadoGreen: "#004643",
   textInputBorder: "#DCDCDC",
   textInputFill: "#FBFBFB",
+  darkOverlay: "rgba(0, 70, 67, .93)",
+  lightOverlay: "rgba(255, 255, 255, 0.8)",
 };

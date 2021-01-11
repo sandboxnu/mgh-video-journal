@@ -78,12 +78,14 @@ export interface CameraRecordingProps {
   overlay: ReactElement;
   finished: () => void;
   videoName: string;
+  overlayBackgroundColor: string;
 }
 
 const CameraRecording: FunctionComponent<CameraRecordingProps> = ({
   overlay,
   finished,
   videoName,
+  overlayBackgroundColor,
 }) => {
   const [recording, setRecording] = useState(false);
   const [camera, setCamera] = useState<Camera | null>(null);
@@ -140,10 +142,21 @@ const CameraRecording: FunctionComponent<CameraRecordingProps> = ({
         />
       )}
       {countdownTime >= 0 && !recording && (
-        <View style={Styles.overlayView}>
+        <View
+          style={{
+            ...Styles.overlayView,
+            backgroundColor: overlayBackgroundColor,
+          }}
+        >
           {overlay}
           <Text
-            style={Styles.beginText}
+            style={{
+              ...Styles.beginText,
+              color:
+                overlayBackgroundColor === Colors.darkOverlay
+                  ? "white"
+                  : Colors.avocadoGreen,
+            }}
           >{`Your recording will begin in ${countdownTime} seconds.`}</Text>
         </View>
       )}

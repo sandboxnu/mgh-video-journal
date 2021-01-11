@@ -25,6 +25,7 @@ import { EpisodeOverlay } from "../components/EpisodeOverlay";
 import Colors from "../constants/Colors";
 import { EpisodeRecallOverlay } from "../components/EpisodeRecallOverlay";
 import OnboardingScreen from "../screens/OnboardingScreen";
+import { EpisodeRecallFinished } from "../screens/EpisodeRecallFinished";
 
 const MainNavigator: FunctionComponent = () => {
   const [navigationState, setNavigationState] = useState<NavigationState>({
@@ -87,10 +88,14 @@ const MainNavigator: FunctionComponent = () => {
           nameCreator={(_, index: number) =>
             `${participantId}/${participantId}_Day${recordingDay}_Episode${index}_recall`
           }
-          nextState={{ type: NavigationScreens.createEpisode }}
+          nextState={{ type: NavigationScreens.episodeRecallFinished }}
           recordingDay={recordingDay}
         />
       );
+    } else if (
+      navigationState.type == NavigationScreens.episodeRecallFinished
+    ) {
+      return <EpisodeRecallFinished />;
     } else if (
       navigationState.type == NavigationScreens.episodeListingOverview
     ) {

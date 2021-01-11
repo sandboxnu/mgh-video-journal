@@ -2,46 +2,35 @@ import React, { FunctionComponent, useEffect, useState } from "react";
 import { View, Text, Button } from "../components/Themed";
 import { StyleSheet } from "react-native";
 import { continueButtonStyle } from "../utils/StylingUtils";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { STORAGE_KEYS } from "../utils/AsyncStoageUtils";
 import { useMainNavigation } from "../hooks/useMainNavigation";
 import Colors from "../constants/Colors";
+import { NavigationScreens } from "../navigation/MainNavigationContext";
 
 function EvenSpacedView() {
   return <View style={{ flex: 1, backgroundColor: "transparent" }} />;
 }
 
-export const EpisodeRecallOverview: FunctionComponent = () => {
-  const [episodes, setEpisodes] = useState([]);
-
+export const EpisodeRecallFinished: FunctionComponent = () => {
   const navigation = useMainNavigation();
-
-  useEffect(() => {
-    AsyncStorage.getItem(STORAGE_KEYS.episodeRecall()).then((episodes) => {
-      if (episodes) {
-        setEpisodes(JSON.parse(episodes));
-      }
-    });
-  }, []);
 
   return (
     <View style={EpisodeRecallOverviewStyles.container}>
       <View style={EpisodeRecallOverviewStyles.titleView}>
         <EvenSpacedView />
-        <Text style={EpisodeRecallOverviewStyles.title}>Episode Recall</Text>
+        <Text style={EpisodeRecallOverviewStyles.title}>
+          Thank you for recalling your episodes
+        </Text>
       </View>
       <Text style={EpisodeRecallOverviewStyles.subtext}>
-        Now we are going to select two Episodes from Day 1 for you to recall in
-        detail. {"\n\n"}
-        As before every recording, we will first make sure your face is visible
-        in the window. {"\n\n"}
-        Then on the following screen, we will tell you which Episode we would
-        like you to do another recording for.
+        We will now move onto the next part of the Video Diary for today, where
+        you will list and tells us about Episodes that happened today. {"\n\n"}
+        This will look the same as what you completed yesterday, but we will
+        still provide you with instructions as reminders.
       </Text>
       <Button
         style={continueButtonStyle(true).style}
         onPress={() => {
-          navigation.navigate({ type: "episodeRecall", episodes });
+          navigation.navigate({ type: NavigationScreens.createEpisode });
         }}
       >
         <Text style={EpisodeRecallOverviewStyles.buttonText}>Get Started!</Text>

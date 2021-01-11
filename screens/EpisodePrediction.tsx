@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { FunctionComponent, useState } from "react";
 import {
+  Linking,
   Keyboard,
   ScrollView,
   StyleSheet,
@@ -10,6 +11,7 @@ import {
 import { View, Text, Button } from "../components/Themed";
 import Colors from "../constants/Colors";
 import { continueButtonStyle } from "../utils/StylingUtils";
+import Contact from "../constants/Contact";
 
 function EvenSpacedView() {
   return <View style={{ flex: 1 }} />;
@@ -27,7 +29,21 @@ const ThankYouScreen: FunctionComponent = () => {
         Thank you for completing Day 1 of your Video Diary! Tomorrow you will
         complete Day 2. {"\n\n"}
         Remember, if you have questions or concerns, please contact a research
-        staff member here or by phone at 978 435 2207. {"\n\n"}
+        staff member{" "}
+        <Text
+          style={ThankYouScreenStyles.bodyLink}
+          onPress={() => Linking.openURL(Contact.contactLink)}
+        >
+          here
+        </Text>{" "}
+        or by phone at{" "}
+        <Text
+          style={ThankYouScreenStyles.bodyContact}
+          onPress={() => Linking.openURL(`tel:${Contact.contactPhone}`)}
+        >
+          {Contact.contactPhone}
+        </Text>
+        . {"\n\n"}
         Thank you again for taking the time to participate in our study. We know
         your time is valuable and we are grateful for your contributions to
         science. {"\n\n"}
@@ -220,6 +236,13 @@ const ThankYouScreenStyles = StyleSheet.create({
   button: {
     ...continueButtonStyle(true).style,
     maxHeight: 60,
+  },
+  bodyContact: {
+    color: Colors.linkOrange,
+  },
+  bodyLink: {
+    color: Colors.linkOrange,
+    textDecorationLine: "underline",
   },
 });
 

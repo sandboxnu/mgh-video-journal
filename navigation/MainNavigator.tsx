@@ -24,6 +24,7 @@ import EpisodeNavigator from "./MainStack";
 import { EpisodeOverlay } from "../components/EpisodeOverlay";
 import Colors from "../constants/Colors";
 import { EpisodeRecallOverlay } from "../components/EpisodeRecallOverlay";
+import OnboardingScreen from "../screens/OnboardingScreen";
 
 const MainNavigator: FunctionComponent = () => {
   const [navigationState, setNavigationState] = useState<NavigationState>({
@@ -105,6 +106,8 @@ const MainNavigator: FunctionComponent = () => {
           recordingDay={recordingDay}
         />
       );
+    } else if (navigationState.type === NavigationScreens.onboarding) {
+      return <OnboardingScreen />;
     } else {
       return undefined;
     }

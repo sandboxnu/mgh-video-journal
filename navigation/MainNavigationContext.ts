@@ -8,6 +8,7 @@ export enum NavigationScreens {
   predictions,
   episodeListingOverview,
   episodeRecallOverivew,
+  onboarding,
 }
 
 // The state for when the episodes have been added, but need to be recorded

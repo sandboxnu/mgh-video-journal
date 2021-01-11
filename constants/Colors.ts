@@ -25,4 +25,6 @@ export default {
   textInputFill: "#FBFBFB",
   darkOverlay: "rgba(0, 70, 67, .93)",
   lightOverlay: "rgba(255, 255, 255, 0.8)",
+  linkOrange: "#e16162",
+  darkText: "#0f3433",
 };

@@ -25,7 +25,7 @@ export default function MainScreen() {
       <EditScreenInfo path="/screens/TabOneScreen.tsx" />
       <Button
         onPress={() => {
-          context.navigate({ type: NavigationScreens.createEpisode });
+          context.navigate({ type: NavigationScreens.onboarding });
         }}
         title={"Go to Day 1"}
       />

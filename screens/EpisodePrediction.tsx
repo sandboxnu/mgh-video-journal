@@ -81,7 +81,7 @@ const EpisodePredictionWrapper: FunctionComponent<EpisodePredictionWrapperProps>
 export const uploadEpisodeInfo = async (
   participantId: string,
   recordingDay: number,
-  predictions?: string[]
+  predictions: string[] = []
 ): Promise<void> => {
   const fileName = `${participantId}/${participantId}_Day${recordingDay}_${new Date()
     .toDateString()

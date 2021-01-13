@@ -40,7 +40,7 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
     startingState
   );
   const [recordingDay, setRecordingDay] = useState(1);
-  const participantId = 1;
+  const participantId = "hi";
 
   retrieveRecordingDay().then(setRecordingDay);
 
@@ -90,7 +90,12 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
     } else if (navigationState.type == NavigationScreens.createEpisode) {
       return <EpisodeNavigator />;
     } else if (navigationState.type == NavigationScreens.predictions) {
-      return <EpisodePredictionWrapper />;
+      return (
+        <EpisodePredictionWrapper
+          participantId={participantId}
+          recordingDay={recordingDay}
+        />
+      );
     } else if (
       navigationState.type == NavigationScreens.episodeRecallOverview
     ) {

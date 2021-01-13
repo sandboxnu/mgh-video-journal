@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
 import React, { FunctionComponent, useState } from "react";
 import {
@@ -8,10 +9,12 @@ import {
   TextInput,
   TouchableWithoutFeedback,
 } from "react-native";
+import { uploadJSONToFirebase } from "../clients/firebaseInteractor";
 import { View, Text, Button } from "../components/Themed";
 import Colors from "../constants/Colors";
 import { continueButtonStyle } from "../utils/StylingUtils";
 import Contact from "../constants/Contact";
+import { STORAGE_KEYS } from "../utils/AsyncStorageUtils";
 
 function EvenSpacedView() {
   return <View style={{ flex: 1 }} />;
@@ -53,22 +56,57 @@ const ThankYouScreen: FunctionComponent = () => {
   );
 };
 
-const EpisodePredictionWrapper: FunctionComponent = () => {
+interface EpisodePredictionWrapperProps {
+  recordingDay: number;
+  participantId: string;
+}
+
+const EpisodePredictionWrapper: FunctionComponent<EpisodePredictionWrapperProps> = ({
+  recordingDay,
+  participantId,
+}) => {
   const [allAdded, setAllAdded] = useState(false);
 
   return !allAdded ? (
-    <EpisodePrediction onFinish={() => setAllAdded(true)} />
+    <EpisodePrediction
+      onFinish={() => setAllAdded(true)}
+      recordingDay={recordingDay}
+      participantId={participantId}
+    />
   ) : (
     <ThankYouScreen />
   );
 };
 
+export const uploadEpisodeInfo = async (
+  participantId: string,
+  recordingDay: number,
+  predictions?: string[]
+): Promise<void> => {
+  const fileName = `${participantId}/${participantId}_Day${recordingDay}_${new Date()
+    .toDateString()
+    .replaceAll(" ", "_")}.json`;
+
+  let createdEpisodes = JSON.parse(
+    (await AsyncStorage.getItem(STORAGE_KEYS.daysEpisodes(recordingDay)))!
+  );
+
+  uploadJSONToFirebase(fileName, {
+    createdEpisodes,
+    predictedEpisodes: predictions,
+  });
+};
+
 interface EpisodePredictionProps {
   onFinish: () => void;
+  recordingDay: number;
+  participantId: string;
 }
 
 const EpisodePrediction: FunctionComponent<EpisodePredictionProps> = ({
   onFinish,
+  recordingDay,
+  participantId,
 }) => {
   const [predictions, setPredictions] = useState<string[]>([]);
   const [hasOneValue, setHasOneValue] = useState(false);
@@ -124,8 +162,8 @@ const EpisodePrediction: FunctionComponent<EpisodePredictionProps> = ({
         <Button
           style={continueButtonStyle(hasOneValue).style}
           disabled={!hasOneValue}
-          onPress={() => {
-            // Will follow with saving the predictions when the saving gets started in the episode recording
+          onPress={async () => {
+            uploadEpisodeInfo(participantId, recordingDay, predictions);
             onFinish();
           }}
         >

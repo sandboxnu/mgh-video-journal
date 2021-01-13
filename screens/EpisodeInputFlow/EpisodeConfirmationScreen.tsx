@@ -31,15 +31,17 @@ function EditableEpisode({ episode, index }: EpisodeProps) {
           episode.initials.trim() || "N/A"
         }`}</Text>
       </View>
-      <Button style={episodeStyles.editButtonContainer}>
+      <Button
+        style={episodeStyles.editButtonContainer}
+        onPress={() => {
+          navigator.navigate("EpisodeEdit", { episode, index });
+        }}
+      >
         <Icon
           name="create-outline"
           size={40}
           color="#FFF"
           style={episodeStyles.icon}
-          onPress={() => {
-            navigator.navigate("EpisodeEdit", { episode, index });
-          }}
         />
       </Button>
     </View>

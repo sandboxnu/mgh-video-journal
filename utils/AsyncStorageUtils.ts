@@ -1,5 +1,5 @@
 export const STORAGE_KEYS = {
-  start_day: () => "StartDay",
+  startDay: () => "StartDay",
   daysEpisodes: (recordingDay: number) => `Day${recordingDay}Episodes`,
   episodeRecall: () => "EpisodeRecall",
   currentState: () => "CurrentState",

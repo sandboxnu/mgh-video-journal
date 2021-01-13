@@ -30,3 +30,12 @@ export const uploadFileToFirebase = async (
     .ref(`extra-check/${name}`)
     .put(await file.blob());
 };
+
+export const uploadJSONToFirebase = async (
+  name: string,
+  object: Object
+): Promise<void> => {
+  const json = JSON.stringify(object);
+  const blob = new Blob([json], { type: "application/json" });
+  firebase.storage().ref(`extra-check/${name}`).put(blob);
+};

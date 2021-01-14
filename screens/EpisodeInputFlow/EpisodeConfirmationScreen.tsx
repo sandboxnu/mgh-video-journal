@@ -203,7 +203,11 @@ const styles = StyleSheet.create({
     color: Colors.avocadoGreen,
   },
   confirmText: {
-    color: "white",
+    color: "#FFFFFF",
+    fontFamily: "Inter_400Regular",
+    fontStyle: "normal",
+    fontSize: 20,
+    lineHeight: 22,
     textAlign: "center",
   },
 });

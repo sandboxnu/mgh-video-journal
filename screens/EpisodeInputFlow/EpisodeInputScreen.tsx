@@ -1,29 +1,31 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { TextInput, Keyboard } from "react-native";
+import { Keyboard, TouchableWithoutFeedback } from "react-native";
 import { Button, Text, View } from "../../components/Themed";
 import Icon from "react-native-vector-icons/Octicons";
 import { Episode } from "../../types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { STORAGE_KEYS } from "../../utils/AsyncStorageUtils";
-import { getCurrentDate, retrieveRecordingDay } from "../../utils/TimeUtils";
-import { TouchableWithoutFeedback } from "react-native";
-import { TimePicker } from "../../components/TimePicker";
 import { containerStyles, styles } from "./EpisodeInputCommonStyles";
+import { EpisodeInputFields } from "../../components/EpisodeInputFields";
+import { EpisodeTutorialOverlay } from "../../components/EpisodeTutorialOverlay";
 
-let recordingDay: number = 1;
+interface EpisodeInputScreenProps {
+  recordingDay: number;
+}
 
-export default function EpisodeInputScreen() {
+export default function EpisodeInputScreen({
+  recordingDay,
+}: EpisodeInputScreenProps) {
   let navigation = useNavigation();
 
-  const [episodeName, setEpisodeName] = useState("");
-  const [initials, setInitials] = useState("");
-  const [startTime, setStartTime] = useState<Date | undefined>(undefined);
-  const [endTime, setEndTime] = useState<Date | undefined>(undefined);
-
   const [episodes, setEpisodes] = useState<Episode[]>([]);
+  const [showTutorial, setShowTutorial] = useState(recordingDay === 1);
 
-  const putEpisodesInStorage = async (finished: boolean) => {
+  const putEpisodesInStorage = async (
+    finished: boolean,
+    episodes: Episode[]
+  ) => {
     await AsyncStorage.setItem(
       STORAGE_KEYS.daysEpisodes(recordingDay),
       JSON.stringify(episodes)
@@ -34,38 +36,7 @@ export default function EpisodeInputScreen() {
     }
   };
 
-  const createEpisode = () => {
-    if (validateEpisode()) {
-      const newEpisode: Episode = {
-        name: episodeName,
-        initials,
-        startTime: startTime!.toISOString(),
-        endTime: endTime!.toISOString(),
-        date: getCurrentDate().toISOString(),
-        recordingDay,
-      };
-      episodes.push(newEpisode);
-      setEpisodes(episodes);
-      putEpisodesInStorage(false);
-      resetEpisodeInput();
-    }
-  };
-
-  const resetEpisodeInput = () => {
-    setEpisodeName("");
-    setInitials("");
-    setStartTime(undefined);
-    setEndTime(undefined);
-  };
-  const validateEpisode = () => {
-    return (
-      episodeName !== "" && startTime !== undefined && endTime !== undefined
-    );
-  };
-
-  const hasError = !validateEpisode();
   const onMount = async () => {
-    recordingDay = await retrieveRecordingDay();
     const todayEpisodes = await AsyncStorage.getItem(
       STORAGE_KEYS.daysEpisodes(recordingDay)
     );
@@ -81,6 +52,13 @@ export default function EpisodeInputScreen() {
     }
   };
 
+  const addEpisode = (episode: Episode) => {
+    const newEpisodes = [...episodes, episode];
+    setEpisodes(newEpisodes);
+    putEpisodesInStorage(false, newEpisodes);
+    setShowTutorial(false);
+  };
+
   useEffect(() => {
     onMount();
   }, []);
@@ -88,94 +66,47 @@ export default function EpisodeInputScreen() {
   return (
     // accessible = false allows the input form continue to be accessible through VoiceOver
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={containerStyles.container}>
-        <View style={containerStyles.titleContainer}>
-          <Text style={styles.title}>
-            Create an episode{"\n\n"}
-            <Text style={styles.inputHeader}>
-              Please enter at least two episodes
-            </Text>{" "}
-          </Text>
-          <Icon
-            name="three-bars"
-            size={30}
-            color="#000"
-            onPress={() => {
-              navigation.navigate("EpisodeDisplay", { episodes });
-            }}
-          />
-        </View>
-        <View style={containerStyles.inputContainer}>
-          <View style={{ flex: 0.5 }} />
-          <View style={styles.input}>
-            <Text style={styles.inputHeader}>Episode title</Text>
-            <TextInput
-              style={{ ...styles.textInput }}
-              maxLength={70}
-              onChangeText={setEpisodeName}
-              value={episodeName}
-              editable
-            />
-          </View>
-          <View style={styles.input}>
-            <Text style={styles.inputHeader}>{"Duration"}</Text>
-            <View style={{ ...styles.timePickers }}>
-              <TimePicker
-                style={styles.timePickerContainer}
-                time={startTime}
-                label="Start time"
-                setTime={setStartTime}
-              />
-              <View style={{ flex: 10 }} />
-              <TimePicker
-                style={styles.timePickerContainer}
-                time={endTime}
-                label="End time"
-                setTime={setEndTime}
-              />
-            </View>
-          </View>
-          <View style={styles.input}>
-            <Text style={styles.inputText}>
-              Persons involved{" "}
-              <Text style={{ ...styles.inputText, ...styles.greyText }}>
-                (Optional)
+      <>
+        <View style={containerStyles.container}>
+          <View style={containerStyles.titleContainer}>
+            <Text style={styles.title}>
+              Create an episode{"\n\n"}
+              <Text style={styles.inputHeader}>
+                Please enter at least two episodes
               </Text>
             </Text>
-            <TextInput
-              style={{ ...styles.textInput }}
-              maxLength={70}
-              onChangeText={setInitials}
-              value={initials}
-              editable
+            <Icon
+              name="three-bars"
+              size={30}
+              color="#000"
+              onPress={() => {
+                navigation.navigate("EpisodeDisplay", { episodes });
+              }}
             />
           </View>
-          <View style={{ flex: 0.5 }} />
-        </View>
-        <View style={containerStyles.buttonsContainer}>
-          <Button
-            disabled={!!hasError}
-            onPress={hasError ? () => {} : createEpisode}
-            style={{
-              ...(hasError ? styles.buttonGrey : styles.buttonRed),
-              ...styles.button,
-            }}
+          <EpisodeInputFields
+            recordingDay={recordingDay}
+            addEpisode={addEpisode}
           >
-            <Text style={styles.buttonText}>Add episode</Text>
-          </Button>
-          <Button
-            onPress={() => putEpisodesInStorage(true)}
-            style={{
-              ...(episodes.length < 2 ? styles.buttonGrey : styles.buttonRed),
-              ...styles.button,
-            }}
-            disabled={episodes.length < 2}
-          >
-            <Text style={styles.buttonText}>Confirm episodes</Text>
-          </Button>
-          <View style={{ flex: 2 }} />
+            <Button
+              onPress={() => putEpisodesInStorage(true, episodes)}
+              style={{
+                ...(episodes.length < 2 ? styles.buttonGrey : styles.buttonRed),
+                ...styles.button,
+              }}
+              disabled={episodes.length < 2}
+            >
+              <Text style={styles.buttonText}>Confirm episodes</Text>
+            </Button>
+          </EpisodeInputFields>
         </View>
-      </View>
+        {showTutorial && (
+          <EpisodeTutorialOverlay
+            recordingDay={recordingDay}
+            addEpisode={addEpisode}
+          />
+        )}
+      </>
     </TouchableWithoutFeedback>
   );
 }

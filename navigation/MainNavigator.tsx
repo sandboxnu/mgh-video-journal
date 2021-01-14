@@ -88,7 +88,7 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
         />
       );
     } else if (navigationState.type == NavigationScreens.createEpisode) {
-      return <EpisodeNavigator />;
+      return <EpisodeNavigator recordingDay={recordingDay} />;
     } else if (navigationState.type == NavigationScreens.predictions) {
       return (
         <EpisodePredictionWrapper

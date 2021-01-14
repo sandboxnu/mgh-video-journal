@@ -10,12 +10,19 @@ import EpisodeEditScreen from "../screens/EpisodeInputFlow/EpisodeEditScreen";
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
 const EpisodeInputStack = createStackNavigator<EpisodeInputStackParamList>();
 
-export default function EpisodeInputNavigator() {
+interface EpisodeInputNavigatorProps {
+  recordingDay: number;
+}
+
+export default function EpisodeInputNavigator({
+  recordingDay,
+}: EpisodeInputNavigatorProps) {
+  const EpisodeInput = () => <EpisodeInputScreen recordingDay={recordingDay} />;
   return (
     <EpisodeInputStack.Navigator>
       <EpisodeInputStack.Screen
         name="EpisodeInput"
-        component={EpisodeInputScreen}
+        component={EpisodeInput}
         options={{ headerShown: false }}
       />
       <EpisodeInputStack.Screen

@@ -28,6 +28,7 @@ export const styles = StyleSheet.create({
     fontSize: 30,
     lineHeight: 36,
     textAlign: "left",
+    color: Colors.avocadoGreen,
   },
   input: {
     justifyContent: "center",
@@ -39,6 +40,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 22,
     marginVertical: "2%",
+    color: Colors.darkText,
   },
   inputText: {
     fontFamily: "Arimo_400Regular",
@@ -46,6 +48,7 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 22,
     marginVertical: "2%",
+    color: Colors.darkText,
   },
   greyText: {
     color: "#9c9c9c",
@@ -59,7 +62,7 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 22,
     color: "#000000",
-
+    backgroundColor: "white",
     padding: 15,
   },
   timePickers: {
@@ -78,6 +81,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     height: 60,
+    borderRadius: 20,
   },
   buttonGrey: {
     backgroundColor: "#8d8d8d",

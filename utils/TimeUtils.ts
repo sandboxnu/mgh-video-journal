@@ -19,8 +19,18 @@ export const getCurrentDate = () => {
 
 export const areDaysEqual = (day1: Date, day2: Date) => {
   return (
-    new Date(day1.getFullYear(), day1.getMonth(), day1.getDate(), 0) ===
-    new Date(day2.getFullYear(), day2.getMonth(), day2.getDate(), 0)
+    new Date(
+      day1.getFullYear(),
+      day1.getMonth(),
+      day1.getDate(),
+      0
+    ).toISOString() ===
+    new Date(
+      day2.getFullYear(),
+      day2.getMonth(),
+      day2.getDate(),
+      0
+    ).toISOString()
   );
 };
 

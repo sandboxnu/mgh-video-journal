@@ -17,7 +17,7 @@ interface OnboardingScreenProps {
 }
 
 export const Day1Screens = [
-  <Intro1 key={2235} />,
+  <Intro1 key={2235} setCanScroll={(c) => {}} />,
   <Intro2 key={22342} />,
   <Intro3 key={23262} />,
   <Intro4 key={7622} />,
@@ -31,6 +31,7 @@ export const Day2And3Screens = (recordingDay: number) => [
 
 export default function OnboardingScreen({ views }: OnboardingScreenProps) {
   const [index, setIndex] = useState(0);
+  const [canScroll, setCanScroll] = useState(false);
 
   return (
     <View style={styles.swiper}>
@@ -39,17 +40,20 @@ export default function OnboardingScreen({ views }: OnboardingScreenProps) {
         index={0}
         onIndexChanged={(i) => setIndex(i)}
         dotColor="transparent"
+        scrollEnabled={canScroll}
         dotStyle={
-          index !== views.length - 1
+          index !== views.length - 1 && canScroll
             ? { ...styles.dotStyle, ...styles.dotSizing }
             : styles.noDotStyle
         }
         activeDotColor={Colors.allowedButtonColor}
         activeDotStyle={
-          index !== views.length - 1 ? styles.dotSizing : styles.noDotStyle
+          index !== views.length - 1 && canScroll
+            ? styles.dotSizing
+            : styles.noDotStyle
         }
       >
-        {views}
+        {views.map((element) => React.cloneElement(element, { setCanScroll }))}
       </Swiper>
     </View>
   );

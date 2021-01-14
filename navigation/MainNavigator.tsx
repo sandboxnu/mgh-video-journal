@@ -39,13 +39,16 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
   startingState,
 }) => {
   // If you want to test a specific flow, update this startingState to be wherever you want to go to
-  const [navigationState, setNavigationState] = useState<NavigationState>(
-    startingState
-  );
+  const [navigationState, setNavigationState] = useState<NavigationState>({
+    type: NavigationScreens.onboarding,
+  });
   const [recordingDay, setRecordingDay] = useState(1);
-  const participantId = "hi";
+  const [participantId, setParticipantId] = useState<string>("");
 
   retrieveRecordingDay().then(setRecordingDay);
+  AsyncStorage.getItem(STORAGE_KEYS.participantId()).then(
+    (v) => v && setParticipantId(v)
+  );
 
   useEffect(() => {
     // The email gets ignored rn, but will be used when we get to the email auth

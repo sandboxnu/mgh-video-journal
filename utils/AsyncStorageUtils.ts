@@ -3,4 +3,5 @@ export const STORAGE_KEYS = {
   daysEpisodes: (recordingDay: number) => `Day${recordingDay}Episodes`,
   episodeRecall: () => "EpisodeRecall",
   currentState: () => "CurrentState",
+  participantId: () => "ParticipantId",
 };

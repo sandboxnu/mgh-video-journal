@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import {
   Linking,
   Keyboard,
@@ -20,7 +20,18 @@ function EvenSpacedView() {
   return <View style={{ flex: 1 }} />;
 }
 
-const ThankYouScreen: FunctionComponent = () => {
+interface ThankYouScreenProps {
+  recordingDay: number;
+  onMount: () => void;
+}
+
+const ThankYouScreen: FunctionComponent<ThankYouScreenProps> = ({
+  recordingDay,
+  onMount,
+}) => {
+  // Upload JSON to Dropbox
+  useEffect(onMount, []);
+
   return (
     <View style={ThankYouScreenStyles.container}>
       <View style={ThankYouScreenStyles.titleView}>
@@ -28,30 +39,56 @@ const ThankYouScreen: FunctionComponent = () => {
         <Text style={ThankYouScreenStyles.title}> Thank you!</Text>
       </View>
 
-      <Text style={ThankYouScreenStyles.subtext}>
-        Thank you for completing Day 1 of your Video Diary! Tomorrow you will
-        complete Day 2. {"\n\n"}
-        Remember, if you have questions or concerns, please contact a research
-        staff member{" "}
-        <Text
-          style={ThankYouScreenStyles.bodyLink}
-          onPress={() => Linking.openURL(Contact.contactLink)}
-        >
-          here
-        </Text>{" "}
-        or by phone at{" "}
-        <Text
-          style={ThankYouScreenStyles.bodyContact}
-          onPress={() => Linking.openURL(`tel:${Contact.contactPhone}`)}
-        >
-          {Contact.contactPhone}
+      {recordingDay === 1 || recordingDay === 2 ? (
+        <Text style={ThankYouScreenStyles.subtext}>
+          Thank you for completing Day {recordingDay} of your Video Diary!
+          Tomorrow you will complete Day {recordingDay + 1}. {"\n\n"}
+          Remember, if you have questions or concerns, please contact a research
+          staff member{" "}
+          <Text
+            style={ThankYouScreenStyles.bodyLink}
+            onPress={() => Linking.openURL(Contact.contactLink)}
+          >
+            here
+          </Text>{" "}
+          or by phone at{" "}
+          <Text
+            style={ThankYouScreenStyles.bodyContact}
+            onPress={() => Linking.openURL(`tel:${Contact.contactPhone}`)}
+          >
+            {Contact.contactPhone}
+          </Text>
+          . {"\n\n"}
+          Thank you again for taking the time to participate in our study. We
+          know your time is valuable and we are grateful for your contributions
+          to science. {"\n\n"}
+          You are now done for the day. We will see you again tomorrow!
         </Text>
-        . {"\n\n"}
-        Thank you again for taking the time to participate in our study. We know
-        your time is valuable and we are grateful for your contributions to
-        science. {"\n\n"}
-        You are now done for the day. We will see you again tomorrow!
-      </Text>
+      ) : (
+        <Text style={ThankYouScreenStyles.subtext}>
+          Thank you for completing Day {recordingDay} of your Video Diary! You
+          are now complete with the study.{"\n\n"}
+          Remember, if you have questions or concerns, please contact a research
+          staff member{" "}
+          <Text
+            style={ThankYouScreenStyles.bodyLink}
+            onPress={() => Linking.openURL(Contact.contactLink)}
+          >
+            here
+          </Text>{" "}
+          or by phone at{" "}
+          <Text
+            style={ThankYouScreenStyles.bodyContact}
+            onPress={() => Linking.openURL(`tel:${Contact.contactPhone}`)}
+          >
+            {Contact.contactPhone}
+          </Text>
+          . {"\n\n"}
+          Thank you again for taking the time to participate in our study. We
+          know your time is valuable and we are grateful for your contributions
+          to science. {"\n\n"}
+        </Text>
+      )}
     </View>
   );
 };
@@ -66,15 +103,21 @@ const EpisodePredictionWrapper: FunctionComponent<EpisodePredictionWrapperProps>
   participantId,
 }) => {
   const [allAdded, setAllAdded] = useState(false);
+  const [predictions, setPredictions] = useState<string[]>([]);
 
-  return !allAdded ? (
+  return (recordingDay === 1 || recordingDay === 2) && !allAdded ? (
     <EpisodePrediction
       onFinish={() => setAllAdded(true)}
-      recordingDay={recordingDay}
-      participantId={participantId}
+      predictions={predictions}
+      setPredictions={setPredictions}
     />
   ) : (
-    <ThankYouScreen />
+    <ThankYouScreen
+      onMount={() =>
+        uploadEpisodeInfo(participantId, recordingDay, predictions)
+      }
+      recordingDay={recordingDay}
+    />
   );
 };
 
@@ -91,7 +134,7 @@ export const uploadEpisodeInfo = async (
     (await AsyncStorage.getItem(STORAGE_KEYS.daysEpisodes(recordingDay)))!
   );
 
-  uploadJSONToFirebase(fileName, {
+  await uploadJSONToFirebase(fileName, {
     createdEpisodes,
     predictedEpisodes: predictions,
   });
@@ -99,16 +142,15 @@ export const uploadEpisodeInfo = async (
 
 interface EpisodePredictionProps {
   onFinish: () => void;
-  recordingDay: number;
-  participantId: string;
+  predictions: string[];
+  setPredictions: (predictions: string[]) => void;
 }
 
 const EpisodePrediction: FunctionComponent<EpisodePredictionProps> = ({
   onFinish,
-  recordingDay,
-  participantId,
+  predictions,
+  setPredictions,
 }) => {
-  const [predictions, setPredictions] = useState<string[]>([]);
   const [hasOneValue, setHasOneValue] = useState(false);
   return (
     // accessible = false allows the input form continue to be accessible through VoiceOver
@@ -162,10 +204,7 @@ const EpisodePrediction: FunctionComponent<EpisodePredictionProps> = ({
         <Button
           style={continueButtonStyle(hasOneValue).style}
           disabled={!hasOneValue}
-          onPress={async () => {
-            uploadEpisodeInfo(participantId, recordingDay, predictions);
-            onFinish();
-          }}
+          onPress={onFinish}
         >
           <Text style={styles.continueText}>Continue</Text>
         </Button>

@@ -2,18 +2,23 @@ import React, { useState, FunctionComponent } from "react";
 import { StyleSheet } from "react-native";
 import { View, Text } from "./Themed";
 
-export const EpisodeListingOverview: FunctionComponent = () => {
+interface EpisodeListingOverviewProps {
+  recallDay: number;
+}
+export const EpisodeListingOverview: FunctionComponent<EpisodeListingOverviewProps> = ({
+  recallDay,
+}) => {
   return (
     <View style={episodeListingStyles.container}>
       <Text style={episodeListingStyles.title}>Great!</Text>
       <Text style={episodeListingStyles.subheader}>Let’s start recording</Text>
       <Text style={episodeListingStyles.text}>
         For this first recording, we would like you to please tell us the names
-        of all of your Episodes from Day 1. {"\n\n"}If you cannot remember the
-        exact title, you can try to identify the episode by a short, few word
-        description. {"\n\n"}
+        of all of your Episodes from Day {recallDay}. {"\n\n"}If you cannot
+        remember the exact title, you can try to identify the episode by a
+        short, few word description. {"\n\n"}
         <Text style={episodeListingStyles.doNot}>Do not</Text> tell us any
-        episodes from today, only from Day 1.
+        episodes from today, only from Day {recallDay}.
       </Text>
     </View>
   );

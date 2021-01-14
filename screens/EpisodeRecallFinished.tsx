@@ -10,7 +10,13 @@ function EvenSpacedView() {
   return <View style={{ flex: 1, backgroundColor: "transparent" }} />;
 }
 
-export const EpisodeRecallFinished: FunctionComponent = () => {
+interface EpisodeRecallFinishedProps {
+  recordingDay: number;
+}
+
+export const EpisodeRecallFinished: FunctionComponent<EpisodeRecallFinishedProps> = ({
+  recordingDay,
+}: EpisodeRecallFinishedProps) => {
   const navigation = useMainNavigation();
 
   return (
@@ -21,20 +27,48 @@ export const EpisodeRecallFinished: FunctionComponent = () => {
           Thank you for recalling your episodes
         </Text>
       </View>
-      <Text style={EpisodeRecallOverviewStyles.subtext}>
-        We will now move onto the next part of the Video Diary for today, where
-        you will list and tells us about Episodes that happened today. {"\n\n"}
-        This will look the same as what you completed yesterday, but we will
-        still provide you with instructions as reminders.
-      </Text>
-      <Button
-        style={continueButtonStyle(true).style}
-        onPress={() => {
-          navigation.navigate({ type: NavigationScreens.createEpisode });
-        }}
-      >
-        <Text style={EpisodeRecallOverviewStyles.buttonText}>Get Started!</Text>
-      </Button>
+      {recordingDay === 2 ? (
+        <>
+          <Text style={EpisodeRecallOverviewStyles.subtext}>
+            We will now move onto the next part of the Video Diary for today,
+            where you will list and tells us about Episodes that happened today.
+            {"\n\n"}
+            This will look the same as what you completed yesterday, but we will
+            still provide you with instructions as reminders.
+          </Text>
+          <Button
+            style={continueButtonStyle(true).style}
+            onPress={() => {
+              navigation.navigate({ type: NavigationScreens.createEpisode });
+            }}
+          >
+            <Text style={EpisodeRecallOverviewStyles.buttonText}>
+              Get Started!
+            </Text>
+          </Button>
+        </>
+      ) : (
+        <>
+          <Text style={EpisodeRecallOverviewStyles.subtext}>
+            We will now move onto the next part of the Video Diary for today,
+            where you will list Episodes that happened yesterday.{"\n\n"}
+            This will look the same as what you completed yesterday, but we will
+            still provide you with instructions as reminders.
+          </Text>
+          <Button
+            style={continueButtonStyle(true).style}
+            onPress={() => {
+              navigation.navigate({
+                type: NavigationScreens.secondEpisodeListingOverview,
+              });
+            }}
+          >
+            <Text style={EpisodeRecallOverviewStyles.buttonText}>
+              Get Started!
+            </Text>
+          </Button>
+        </>
+      )}
     </View>
   );
 };

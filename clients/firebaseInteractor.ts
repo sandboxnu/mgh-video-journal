@@ -37,5 +37,5 @@ export const uploadJSONToFirebase = async (
 ): Promise<void> => {
   const json = JSON.stringify(object);
   const blob = new Blob([json], { type: "application/json" });
-  firebase.storage().ref(`extra-check/${name}`).put(blob);
+  await firebase.storage().ref(`extra-check/${name}`).put(blob);
 };

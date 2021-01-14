@@ -121,7 +121,7 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
     } else if (
       navigationState.type == NavigationScreens.episodeRecallFinished
     ) {
-      return <EpisodeRecallFinished />;
+      return <EpisodeRecallFinished recordingDay={recordingDay} />;
     } else if (
       navigationState.type == NavigationScreens.episodeListingOverview
     ) {
@@ -129,11 +129,26 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
         <CameraFlowNavigator
           objects={[true]}
           overlayBackgroundColor={Colors.darkOverlay}
-          overlayCreator={(_) => <EpisodeListingOverview />}
+          overlayCreator={(_) => <EpisodeListingOverview recallDay={1} />}
           nameCreator={() =>
             `${participantId}/${participantId}_Day${recordingDay}_episodeListing`
           }
           nextState={{ type: NavigationScreens.episodeRecallOverview }}
+          recordingDay={recordingDay}
+        />
+      );
+    } else if (
+      navigationState.type == NavigationScreens.secondEpisodeListingOverview
+    ) {
+      return (
+        <CameraFlowNavigator
+          objects={[true]}
+          overlayBackgroundColor={Colors.darkOverlay}
+          overlayCreator={(_) => <EpisodeListingOverview recallDay={2} />}
+          nameCreator={() =>
+            `${participantId}/${participantId}_Day${recordingDay}_episodeListing`
+          }
+          nextState={{ type: NavigationScreens.createEpisode }}
           recordingDay={recordingDay}
         />
       );

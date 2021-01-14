@@ -46,7 +46,7 @@ export const retrieveRecordingDay = async () => {
   const startDay = await AsyncStorage.getItem(STORAGE_KEYS.startDay());
   if (startDay === null) {
     // if the startDay hasn't been set, this is their first time on this page, so set it to the current date
-    // current date is only based on year/month/date so the time will always be the same accross days
+    // current date is only based on year/month/date so the time will always be the same across days
     await AsyncStorage.setItem(
       STORAGE_KEYS.startDay(),
       getCurrentDate().toISOString()

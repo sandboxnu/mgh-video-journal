@@ -73,7 +73,7 @@ export const EpisodeInputFields: FunctionComponent<EpisodeInputFieldsProps> = ({
       <View style={containerStyles.inputContainer}>
         <View style={{ flex: 0.5 }} />
         <View style={styles.input}>
-          <Text style={{ ...textColorChange, ...styles.inputHeader }}>
+          <Text style={{ ...styles.inputHeader, ...textColorChange }}>
             Episode title
           </Text>
           <TextInput
@@ -92,7 +92,7 @@ export const EpisodeInputFields: FunctionComponent<EpisodeInputFieldsProps> = ({
           }}
           pointerEvents={stateOpacity(1) === 100 ? "auto" : "none"}
         >
-          <Text style={{ ...textColorChange, ...styles.inputHeader }}>
+          <Text style={{ ...styles.inputHeader, ...textColorChange }}>
             {"Duration"}
           </Text>
           <View
@@ -128,7 +128,7 @@ export const EpisodeInputFields: FunctionComponent<EpisodeInputFieldsProps> = ({
           }}
           pointerEvents={stateOpacity(2) === 100 ? "auto" : "none"}
         >
-          <Text style={{ ...textColorChange, ...styles.inputHeader }}>
+          <Text style={{ ...styles.inputHeader, ...textColorChange }}>
             Persons involved{" "}
             <Text
               style={{

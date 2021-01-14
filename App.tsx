@@ -40,6 +40,9 @@ export default function App() {
   const validateCurrentDayOrGoToNext = async (
     appStorage: AppStateStorage
   ): Promise<AppStateStorage> => {
+    if (appStorage.state.type === NavigationScreens.onboarding) {
+      return appStorage;
+    }
     // If the days are equal from what is on disk, then do nothing. The interesting case is when the days change
     if (areDaysEqual(appStorage.date, getCurrentDate())) {
       return appStorage;
@@ -51,9 +54,8 @@ export default function App() {
           date: getCurrentDate(),
         };
       } else {
-        // In the future, we will want to go to a screen with a clear button, but for now (for testing), stay at the episode recall screen
         return {
-          state: { type: NavigationScreens.episodeRecallOverview },
+          state: { type: NavigationScreens.episodeClearing },
           date: getCurrentDate(),
         };
       }
@@ -65,7 +67,10 @@ export default function App() {
       .then((value) =>
         value != null
           ? JSON.parse(value)
-          : { state: { type: NavigationScreens.intro }, date: getCurrentDate() }
+          : {
+              state: { type: NavigationScreens.onboarding },
+              date: getCurrentDate(),
+            }
       )
       .then(fixDates)
       .then(validateCurrentDayOrGoToNext)

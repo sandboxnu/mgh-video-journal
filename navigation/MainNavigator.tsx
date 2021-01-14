@@ -31,6 +31,7 @@ import OnboardingScreen, {
   Day2And3Screens,
 } from "../screens/OnboardingScreen";
 import { EpisodeRecallFinished } from "../screens/EpisodeRecallFinished";
+import { ClearEpisodeScreen } from "../screens/ClearEpisodeScreen";
 
 interface MainNavigatorProps {
   startingState: NavigationState;
@@ -39,13 +40,18 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
   startingState,
 }) => {
   // If you want to test a specific flow, update this startingState to be wherever you want to go to
-  const [navigationState, setNavigationState] = useState<NavigationState>({
-    type: NavigationScreens.onboarding,
-  });
+  const [navigationState, setNavigationState] = useState<NavigationState>(
+    startingState
+  );
   const [recordingDay, setRecordingDay] = useState(1);
   const [participantId, setParticipantId] = useState<string>("");
 
-  retrieveRecordingDay().then(setRecordingDay);
+  console.log(startingState);
+  AsyncStorage.getItem(STORAGE_KEYS.startDay()).then(console.log);
+
+  if (navigationState.type !== NavigationScreens.onboarding) {
+    retrieveRecordingDay().then(setRecordingDay);
+  }
   AsyncStorage.getItem(STORAGE_KEYS.participantId()).then(
     (v) => v && setParticipantId(v)
   );
@@ -56,13 +62,15 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
   }, []);
 
   useEffect(() => {
-    AsyncStorage.setItem(
-      STORAGE_KEYS.currentState(),
-      JSON.stringify({
-        state: navigationState,
-        date: getCurrentDate(),
-      })
-    );
+    if (navigationState.type !== NavigationScreens.onboarding) {
+      AsyncStorage.setItem(
+        STORAGE_KEYS.currentState(),
+        JSON.stringify({
+          state: navigationState,
+          date: getCurrentDate(),
+        })
+      );
+    }
   }, [navigationState]);
 
   if (
@@ -163,6 +171,8 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
           views={Day2And3Screens(navigationState.recordingDay)}
         />
       );
+    } else if (navigationState.type === NavigationScreens.episodeClearing) {
+      return <ClearEpisodeScreen />;
     } else {
       return undefined;
     }

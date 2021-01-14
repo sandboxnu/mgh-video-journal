@@ -1,6 +1,6 @@
 import React from "react";
-import AIntroScreen, { styles as abstractStyles } from "./AIntroScreen";
-import { Text } from "../../components/Themed";
+import AIntroScreen, { styles as abstractStyles } from "../AIntroScreen";
+import { Text } from "../../../components/Themed";
 
 export default function Intro2() {
   return (

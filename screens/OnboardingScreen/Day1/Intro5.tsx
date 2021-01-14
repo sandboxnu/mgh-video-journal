@@ -1,10 +1,9 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Button, Text, View } from "../../components/Themed";
-import Colors from "../../constants/Colors";
-import { useMainNavigation } from "../../hooks/useMainNavigation";
-import { NavigationScreens } from "../../navigation/MainNavigationContext";
-import AIntroScreen from "./AIntroScreen";
+import { Button, Text, View } from "../../../components/Themed";
+import Colors from "../../../constants/Colors";
+import { useMainNavigation } from "../../../hooks/useMainNavigation";
+import { NavigationScreens } from "../../../navigation/MainNavigationContext";
 
 export default function Intro5() {
   const navigation = useMainNavigation();

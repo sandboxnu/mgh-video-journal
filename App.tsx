@@ -45,15 +45,9 @@ export default function App() {
       return appStorage;
     } else {
       const recordingDay = await retrieveRecordingDay();
-      if (recordingDay == 2) {
+      if (recordingDay === 2 || recordingDay === 3) {
         return {
-          state: { type: NavigationScreens.episodeRecallOverview },
-          date: getCurrentDate(),
-        };
-      } else if (recordingDay == 3) {
-        // Right now these are the same, but at some point I am assuming that we will want to go to have a different thing on day 3
-        return {
-          state: { type: NavigationScreens.episodeRecallOverview },
+          state: { type: "onboarding2or3", recordingDay },
           date: getCurrentDate(),
         };
       } else {

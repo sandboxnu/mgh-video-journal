@@ -26,7 +26,10 @@ import Colors from "../constants/Colors";
 import { EpisodeRecallOverlay } from "../components/EpisodeRecallOverlay";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { STORAGE_KEYS } from "../utils/AsyncStorageUtils";
-import OnboardingScreen from "../screens/OnboardingScreen";
+import OnboardingScreen, {
+  Day1Screens,
+  Day2And3Screens,
+} from "../screens/OnboardingScreen";
 import { EpisodeRecallFinished } from "../screens/EpisodeRecallFinished";
 
 interface MainNavigatorProps {
@@ -135,7 +138,13 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
         />
       );
     } else if (navigationState.type === NavigationScreens.onboarding) {
-      return <OnboardingScreen />;
+      return <OnboardingScreen views={Day1Screens} />;
+    } else if (navigationState.type === "onboarding2or3") {
+      return (
+        <OnboardingScreen
+          views={Day2And3Screens(navigationState.recordingDay)}
+        />
+      );
     } else {
       return undefined;
     }

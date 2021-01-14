@@ -1,6 +1,6 @@
 import React from "react";
-import AIntroScreen, { styles as abstractStyles } from "./AIntroScreen";
-import { Text, View } from "../../components/Themed";
+import AIntroScreen, { styles as abstractStyles } from "../AIntroScreen";
+import { Text, View } from "../../../components/Themed";
 import { Image } from "react-native";
 
 export default function Intro4() {
@@ -9,7 +9,7 @@ export default function Intro4() {
       <View style={abstractStyles.childrenBody}>
         <Image
           style={abstractStyles.image}
-          source={require("../../assets/images/avocado-man.png")}
+          source={require("../../../assets/images/avocado-man.png")}
         />
         <Text style={abstractStyles.bodyText}>
           After you have identified and named your episodes, you will complete a

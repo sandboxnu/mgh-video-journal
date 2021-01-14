@@ -30,6 +30,12 @@ interface GivenPredictions {
   predictions: String[];
 }
 
+// the state for onboarding day 2 and 3
+interface OnboardingDay2Or3 {
+  type: "onboarding2or3";
+  recordingDay: 2 | 3;
+}
+
 // A basic state that only has a screen
 interface BasicNavigationState {
   type: NavigationScreens;
@@ -40,7 +46,8 @@ export type NavigationState =
   | BasicNavigationState
   | NeedToRecordEpisodes
   | GivenPredictions
-  | EpisodeRecall;
+  | EpisodeRecall
+  | OnboardingDay2Or3;
 
 // The context to pass down the navigation updater function through
 export const MainNavigationContext = createContext((_: NavigationState) => {});

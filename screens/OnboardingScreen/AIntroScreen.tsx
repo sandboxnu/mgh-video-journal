@@ -24,21 +24,20 @@ export default function AIntroScreen({
 
 export const styles = StyleSheet.create({
   container: {
-    padding: "10%",
     flex: 1,
+    padding: 50,
+    justifyContent: "space-around",
   },
   header: {
-    flex: 1,
     justifyContent: "center",
+    marginVertical: 60,
   },
   headerText: {
     fontSize: 40,
     fontFamily: "Inter_700Bold",
     color: Colors.avocadoGreen,
   },
-  body: {
-    flex: 2,
-  },
+  body: { flex: 1, justifyContent: "space-between" },
   bodyText: {
     color: Colors.darkText,
     fontSize: 18,

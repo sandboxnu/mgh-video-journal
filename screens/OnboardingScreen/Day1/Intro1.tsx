@@ -1,9 +1,9 @@
 import { Linking, StyleSheet } from "react-native";
-import { Text, View } from "../../components/Themed";
+import { Text } from "../../../components/Themed";
 import React from "react";
-import AIntroScreen, { styles as abstractStyles } from "./AIntroScreen";
-import Colors from "../../constants/Colors";
-import Contact from "../../constants/Contact";
+import AIntroScreen, { styles as abstractStyles } from "../AIntroScreen";
+import Colors from "../../../constants/Colors";
+import Contact from "../../../constants/Contact";
 
 export default function Intro1() {
   return (

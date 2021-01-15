@@ -44,8 +44,6 @@ export const ThankYouScreen: FunctionComponent<ThankYouScreenProps> = ({
           know your time is valuable and we are grateful for your contributions
           to science. {"\n\n"}
           You are now done for the day. We will see you again tomorrow!
-          {"\n\n"}
-          Please exit and close the app.
         </Text>
       ) : (
         <Text style={ThankYouScreenStyles.subtext}>

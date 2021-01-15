@@ -24,7 +24,7 @@ export const Day1Screens = [
   <Intro5 key={87922} />,
 ];
 export const Day2And3Screens = (recordingDay: number) => [
-  <Intro1Day2 key={22} recordingDay={recordingDay} />,
+  <Intro1Day2 key={22} recordingDay={recordingDay} setCanScroll={(c) => {}} />,
   <Intro2Day2 key={2} />,
   <Intro3Day2 key={5} />,
 ];

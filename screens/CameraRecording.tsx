@@ -1,3 +1,5 @@
+// imported to try and get face detection to work
+import * as _FaceDetector from "expo-face-detector";
 import { Camera } from "expo-camera";
 import React, {
   FunctionComponent,
@@ -69,7 +71,7 @@ const SavedOverlayViews = StyleSheet.create({
   },
 });
 
-const COUNTDOWN_TIME = 10;
+const COUNTDOWN_TIME = 20;
 // ~150MB
 const MAX_FILE_SIZE = 150000000;
 const FourEightyP = "480P";

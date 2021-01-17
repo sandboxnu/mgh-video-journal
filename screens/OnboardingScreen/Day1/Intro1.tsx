@@ -14,14 +14,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { STORAGE_KEYS } from "../../../utils/AsyncStorageUtils";
 
 interface Intro1Props {
-  setCanScroll: (canScroll: boolean) => void;
+  setCanScroll?: (canScroll: boolean) => void;
 }
 
 export default function Intro1({ setCanScroll }: Intro1Props) {
   const [participantId, setParticipantId] = useState("");
   const storeParticipantId = async () => {
     if (participantId !== "") {
-      setCanScroll(true);
+      setCanScroll?.(true);
       await AsyncStorage.setItem(STORAGE_KEYS.participantId(), participantId);
     }
   };

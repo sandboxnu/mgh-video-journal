@@ -9,6 +9,7 @@ import { STORAGE_KEYS } from "../../utils/AsyncStorageUtils";
 import { containerStyles, styles } from "./EpisodeInputCommonStyles";
 import { EpisodeInputFields } from "../../components/EpisodeInputFields";
 import { EpisodeTutorialOverlay } from "../../components/EpisodeTutorialOverlay";
+import Colors from "../../constants/Colors";
 
 interface EpisodeInputScreenProps {
   recordingDay: number;
@@ -59,9 +60,7 @@ export default function EpisodeInputScreen({
     setShowTutorial(false);
   };
 
-  useEffect(() => {
-    onMount();
-  }, []);
+  onMount();
 
   return (
     // accessible = false allows the input form continue to be accessible through VoiceOver
@@ -78,9 +77,12 @@ export default function EpisodeInputScreen({
             <Icon
               name="three-bars"
               size={30}
-              color="#000"
+              color={Colors.avocadoGreen}
               onPress={() => {
-                navigation.navigate("EpisodeDisplay", { episodes });
+                navigation.navigate("EpisodeDisplay", {
+                  episodes,
+                  recordingDay,
+                });
               }}
             />
           </View>

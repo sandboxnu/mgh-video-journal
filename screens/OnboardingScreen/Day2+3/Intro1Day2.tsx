@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Text, View } from "../../../components/Themed";
 import Colors from "../../../constants/Colors";
 import { StyleSheet } from "react-native";
 
 interface Intro1Day2Props {
   recordingDay: number;
+  setCanScroll?: (canScrollHuh: boolean) => void;
 }
-export default function Intro1Day2({ recordingDay }: Intro1Day2Props) {
+export default function Intro1Day2({
+  recordingDay,
+  setCanScroll,
+}: Intro1Day2Props) {
+  // make sure the user can scroll
+  useEffect(() => setCanScroll?.(true), []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.headerText}>

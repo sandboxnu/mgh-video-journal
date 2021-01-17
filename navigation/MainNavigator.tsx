@@ -32,6 +32,7 @@ import OnboardingScreen, {
 } from "../screens/OnboardingScreen";
 import { EpisodeRecallFinished } from "../screens/EpisodeRecallFinished";
 import { ClearEpisodeScreen } from "../screens/ClearEpisodeScreen";
+import { ThankYouScreen } from "../screens/ThankYouScreen";
 
 interface MainNavigatorProps {
   startingState: NavigationState;
@@ -174,6 +175,8 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
       );
     } else if (navigationState.type === NavigationScreens.episodeClearing) {
       return <ClearEpisodeScreen />;
+    } else if (navigationState.type === "thankYou") {
+      return <ThankYouScreen recordingDay={navigationState.recordingDay} />;
     } else {
       return undefined;
     }

@@ -38,6 +38,12 @@ interface OnboardingDay2Or3 {
   recordingDay: 2 | 3;
 }
 
+// the final thank you screen after data has been uploaded
+interface ThankYou {
+  type: "thankYou";
+  recordingDay: number;
+}
+
 // A basic state that only has a screen
 interface BasicNavigationState {
   type: NavigationScreens;
@@ -49,7 +55,8 @@ export type NavigationState =
   | NeedToRecordEpisodes
   | GivenPredictions
   | EpisodeRecall
-  | OnboardingDay2Or3;
+  | OnboardingDay2Or3
+  | ThankYou;
 
 // The context to pass down the navigation updater function through
 export const MainNavigationContext = createContext((_: NavigationState) => {});

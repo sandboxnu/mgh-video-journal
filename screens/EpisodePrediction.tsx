@@ -1,8 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from "@expo/vector-icons";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useRef, useState } from "react";
 import {
-  Linking,
   Keyboard,
   ScrollView,
   StyleSheet,
@@ -13,85 +12,9 @@ import { uploadJSONToFirebase } from "../clients/firebaseInteractor";
 import { View, Text, Button } from "../components/Themed";
 import Colors from "../constants/Colors";
 import { continueButtonStyle } from "../utils/StylingUtils";
-import Contact from "../constants/Contact";
 import { STORAGE_KEYS } from "../utils/AsyncStorageUtils";
-
-function EvenSpacedView() {
-  return <View style={{ flex: 1 }} />;
-}
-
-interface ThankYouScreenProps {
-  recordingDay: number;
-  onMount: () => void;
-}
-
-const ThankYouScreen: FunctionComponent<ThankYouScreenProps> = ({
-  recordingDay,
-  onMount,
-}) => {
-  // Upload JSON to Dropbox
-  useEffect(onMount, []);
-
-  return (
-    <View style={ThankYouScreenStyles.container}>
-      <View style={ThankYouScreenStyles.titleView}>
-        <EvenSpacedView />
-        <Text style={ThankYouScreenStyles.title}> Thank you!</Text>
-      </View>
-
-      {recordingDay === 1 || recordingDay === 2 ? (
-        <Text style={ThankYouScreenStyles.subtext}>
-          Thank you for completing Day {recordingDay} of your Video Diary!
-          Tomorrow you will complete Day {recordingDay + 1}. {"\n\n"}
-          Remember, if you have questions or concerns, please contact a research
-          staff member{" "}
-          <Text
-            style={ThankYouScreenStyles.bodyLink}
-            onPress={() => Linking.openURL(Contact.contactLink)}
-          >
-            here
-          </Text>{" "}
-          or by phone at{" "}
-          <Text
-            style={ThankYouScreenStyles.bodyContact}
-            onPress={() => Linking.openURL(`tel:${Contact.contactPhone}`)}
-          >
-            {Contact.contactPhone}
-          </Text>
-          . {"\n\n"}
-          Thank you again for taking the time to participate in our study. We
-          know your time is valuable and we are grateful for your contributions
-          to science. {"\n\n"}
-          You are now done for the day. We will see you again tomorrow!
-        </Text>
-      ) : (
-        <Text style={ThankYouScreenStyles.subtext}>
-          Thank you for completing Day {recordingDay} of your Video Diary! You
-          are now complete with the study.{"\n\n"}
-          Remember, if you have questions or concerns, please contact a research
-          staff member{" "}
-          <Text
-            style={ThankYouScreenStyles.bodyLink}
-            onPress={() => Linking.openURL(Contact.contactLink)}
-          >
-            here
-          </Text>{" "}
-          or by phone at{" "}
-          <Text
-            style={ThankYouScreenStyles.bodyContact}
-            onPress={() => Linking.openURL(`tel:${Contact.contactPhone}`)}
-          >
-            {Contact.contactPhone}
-          </Text>
-          . {"\n\n"}
-          Thank you again for taking the time to participate in our study. We
-          know your time is valuable and we are grateful for your contributions
-          to science. {"\n\n"}
-        </Text>
-      )}
-    </View>
-  );
-};
+import { useMainNavigation } from "../hooks/useMainNavigation";
+import { EvenSpacedView } from "../components/EvenSpacedView";
 
 interface EpisodePredictionWrapperProps {
   recordingDay: number;
@@ -104,18 +27,31 @@ const EpisodePredictionWrapper: FunctionComponent<EpisodePredictionWrapperProps>
 }) => {
   const [allAdded, setAllAdded] = useState(false);
   const [predictions, setPredictions] = useState<string[]>([]);
+  const hasUploadedRef = useRef(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  return (recordingDay === 1 || recordingDay === 2) && !allAdded ? (
+  const navigation = useMainNavigation();
+
+  // upload the data, but only do it once. keep track using a ref
+  // this will upload immediately on day 3 (no predictions), or wait for allAdded on day1/2
+  const shouldUpload = !(
+    (recordingDay === 1 || recordingDay === 2) &&
+    !allAdded
+  );
+  if (shouldUpload && !hasUploadedRef.current) {
+    hasUploadedRef.current = true;
+    setSubmitting(true);
+    uploadEpisodeInfo(participantId, recordingDay, predictions);
+    setSubmitting(false);
+    navigation.navigate({ type: "thankYou", recordingDay });
+  }
+
+  return (
     <EpisodePrediction
       onFinish={() => setAllAdded(true)}
       predictions={predictions}
       setPredictions={setPredictions}
-    />
-  ) : (
-    <ThankYouScreen
-      onMount={() =>
-        uploadEpisodeInfo(participantId, recordingDay, predictions)
-      }
+      loading={submitting}
       recordingDay={recordingDay}
     />
   );
@@ -144,11 +80,15 @@ interface EpisodePredictionProps {
   onFinish: () => void;
   predictions: string[];
   setPredictions: (predictions: string[]) => void;
+  loading: boolean;
+  recordingDay: number;
 }
 
 const EpisodePrediction: FunctionComponent<EpisodePredictionProps> = ({
+  recordingDay,
   onFinish,
   predictions,
+  loading,
   setPredictions,
 }) => {
   const [hasOneValue, setHasOneValue] = useState(false);
@@ -159,7 +99,7 @@ const EpisodePrediction: FunctionComponent<EpisodePredictionProps> = ({
         <Text style={styles.header}>You are almost done!</Text>
         <Text style={styles.subheader}>
           Before you finish we would like you to tell us what you think your
-          episodes for tomorrow (Day 2) will be.
+          episodes for tomorrow (Day {recordingDay + 1}) will be.
         </Text>
         <View style={{ flex: 7 }}>
           <ScrollView style={styles.scrollView}>
@@ -171,9 +111,11 @@ const EpisodePrediction: FunctionComponent<EpisodePredictionProps> = ({
                   placeholder="Enter episode title"
                   placeholderTextColor={styles.addEpisodeText.color}
                   onChangeText={(t) => {
-                    predictions[idx] = t;
-                    setPredictions(predictions);
-                    setHasOneValue(predictions.some((val) => val !== ""));
+                    const newPredictions = predictions.map((e, i) =>
+                      i !== idx ? e : t
+                    );
+                    setPredictions(newPredictions);
+                    setHasOneValue(newPredictions.some((val) => val !== ""));
                   }}
                 />
                 <Ionicons
@@ -182,9 +124,11 @@ const EpisodePrediction: FunctionComponent<EpisodePredictionProps> = ({
                   color={Colors.avocadoGreen}
                   size={25}
                   onPress={() => {
-                    predictions.splice(idx, 1);
-                    setPredictions(predictions);
-                    setHasOneValue(predictions.some((val) => val !== ""));
+                    const newPredictions = predictions.filter(
+                      (_, index) => index !== idx
+                    );
+                    setPredictions(newPredictions);
+                    setHasOneValue(newPredictions.some((val) => val !== ""));
                   }}
                 />
               </View>
@@ -203,7 +147,7 @@ const EpisodePrediction: FunctionComponent<EpisodePredictionProps> = ({
         </View>
         <Button
           style={continueButtonStyle(hasOneValue).style}
-          disabled={!hasOneValue}
+          disabled={!hasOneValue || loading}
           onPress={onFinish}
         >
           <Text style={styles.continueText}>Continue</Text>
@@ -281,45 +225,6 @@ const styles = StyleSheet.create({
   icon: {
     transform: [{ rotate: "45deg" }],
     marginHorizontal: 10,
-  },
-});
-
-const ThankYouScreenStyles = StyleSheet.create({
-  titleView: {
-    flex: 1,
-    margin: 0,
-    padding: 0,
-  },
-  title: {
-    fontWeight: "700",
-    flex: 1,
-    fontSize: 40,
-    textAlign: "left",
-    color: Colors.avocadoGreen,
-    fontFamily: "Arimo_700Bold",
-    lineHeight: 48.4,
-  },
-  container: {
-    ...styles.container,
-    justifyContent: "flex-start",
-  },
-  subtext: {
-    flex: 5,
-    fontWeight: "400",
-    fontSize: 18,
-    fontFamily: "Arimo_400Regular",
-    color: Colors.avocadoGreen,
-  },
-  button: {
-    ...continueButtonStyle(true).style,
-    maxHeight: 60,
-  },
-  bodyContact: {
-    color: Colors.linkOrange,
-  },
-  bodyLink: {
-    color: Colors.linkOrange,
-    textDecorationLine: "underline",
   },
 });
 

@@ -75,17 +75,16 @@ export const EpisodeRecallFinished: FunctionComponent<EpisodeRecallFinishedProps
 
 const EpisodeRecallOverviewStyles = StyleSheet.create({
   titleView: {
-    flex: 1,
     margin: 0,
     padding: 0,
     backgroundColor: "transparent",
   },
   title: {
     fontFamily: "Inter_700Bold",
-    flex: 1,
     fontSize: 40,
     textAlign: "left",
     color: "white",
+    marginVertical: 50,
   },
   container: {
     flex: 1,

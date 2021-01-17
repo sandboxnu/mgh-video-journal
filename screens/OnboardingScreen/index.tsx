@@ -17,7 +17,7 @@ interface OnboardingScreenProps {
 }
 
 export const Day1Screens = [
-  <Intro1 key={2235} setCanScroll={(c) => {}} />,
+  <Intro1 key={2235} />,
   <Intro2 key={22342} />,
   <Intro3 key={23262} />,
   <Intro4 key={7622} />,

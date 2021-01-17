@@ -32,7 +32,9 @@ export default function Intro3Day2() {
       <Button
         style={styles.getStartedButton}
         onPress={() => {
-          navigation.navigate({ type: NavigationScreens.createEpisode });
+          navigation.navigate({
+            type: NavigationScreens.episodeListingOverview,
+          });
         }}
       >
         <Text style={styles.buttonText}>Get started</Text>

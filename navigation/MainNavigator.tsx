@@ -46,8 +46,9 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
   const [recordingDay, setRecordingDay] = useState(1);
   const [participantId, setParticipantId] = useState<string>("");
 
-  console.log(startingState);
-  AsyncStorage.getItem(STORAGE_KEYS.startDay()).then(console.log);
+  useEffect(() => {
+    setNavigationState(startingState);
+  }, [startingState]);
 
   if (navigationState.type !== NavigationScreens.onboarding) {
     retrieveRecordingDay().then(setRecordingDay);

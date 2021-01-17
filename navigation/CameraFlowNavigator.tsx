@@ -34,7 +34,7 @@ function CameraFlowNavigator<T>({
   const [currentState, setCurrentState] = useState(CurrentScreen.prepareFace);
   const navigation = useMainNavigation();
 
-  if (currentObjectIndex + 1 >= objectValues.length) {
+  if (currentObjectIndex + 1 > objectValues.length) {
     navigation.navigate(nextState);
   }
 

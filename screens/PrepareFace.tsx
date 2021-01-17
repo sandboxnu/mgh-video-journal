@@ -18,6 +18,7 @@ import {
 import { Button, Text } from "../components/Themed";
 import Colors from "../constants/Colors";
 import { continueButtonStyle } from "../utils/StylingUtils";
+import * as Permissions from "expo-permissions";
 
 const SpacingDiv = () => {
   return <View style={{ flex: 1 }} />;
@@ -139,9 +140,11 @@ const PrepareFace: FunctionComponent<PrepareFaceProps> = ({ finished }) => {
     height: (dimensions.height * 2) / 3,
   };
   useEffect(() => {
-    Camera.requestPermissionsAsync().then((response) => {
-      setHasPermission(response.status === "granted");
-    });
+    Camera.requestPermissionsAsync()
+      .then(() => Permissions.askAsync(Permissions.AUDIO_RECORDING))
+      .then((response) => {
+        setHasPermission(response.status === "granted");
+      });
   }, []);
   if (!permissions) {
     return <Text>Please give permissions</Text>;

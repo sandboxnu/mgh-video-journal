@@ -47,9 +47,9 @@ const MainNavigator: FunctionComponent<MainNavigatorProps> = ({
   const [recordingDay, setRecordingDay] = useState(1);
   const [participantId, setParticipantId] = useState<string>("");
 
-  useEffect(() => {
-    setNavigationState(startingState);
-  }, [startingState]);
+  // useEffect(() => {
+  //   setNavigationState(startingState);
+  // }, [startingState]);
 
   if (navigationState.type !== NavigationScreens.onboarding) {
     retrieveRecordingDay().then(setRecordingDay);

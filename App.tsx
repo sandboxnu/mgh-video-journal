@@ -5,7 +5,6 @@ import {
 } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useState } from "react";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import useCachedResources from "./hooks/useCachedResources";
 import useColorScheme from "./hooks/useColorScheme";
@@ -20,7 +19,8 @@ import {
   getCurrentDate,
   retrieveRecordingDay,
 } from "./utils/TimeUtils";
-import { AppState } from "react-native";
+import { AppState, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();

@@ -28,7 +28,7 @@ exports.exportDropbox = functions.storage
           Authorization: `Bearer ${token["not_the_access_token"]}`,
           "Content-Type": "application/octet-stream",
           "Dropbox-API-Arg": JSON.stringify({
-            path: "/" + fileName.join("/"),
+            path: "/R56_Video_Diary/" + fileName.join("/"),
             mode: "add",
             autorename: true,
             strict_conflict: false,
@@ -40,11 +40,5 @@ exports.exportDropbox = functions.storage
         .catch(console.log);
     }
 
-    await admin
-      .storage()
-      .bucket()
-      .file(filePath)
-      .delete()
-      .then(console.log)
-      .catch(console.log);
+    await admin.storage().bucket().file(filePath).delete().catch(console.log);
   });

@@ -1,15 +1,16 @@
 import React from "react";
 import AIntroScreen, { styles as abstractStyles } from "../AIntroScreen";
-import { Image } from "react-native";
 import { Text, View } from "../../../components/Themed";
+import LottieView from "lottie-react-native";
 
 export default function Intro3() {
   return (
     <AIntroScreen headerText="Overview">
       <View style={abstractStyles.childrenBody}>
-        <Image
+        <LottieView
           style={abstractStyles.image}
-          source={require("../../../assets/images/old-man.png")}
+          loop
+          source={require("../../../assets/animations/onboarding1.json")}
         />
         <Text style={abstractStyles.bodyText}>
           Please give each episode a brief name so you can reference it as you

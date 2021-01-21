@@ -1,15 +1,25 @@
 import React from "react";
 import AIntroScreen, { styles as abstractStyles } from "../AIntroScreen";
 import { Text, View } from "../../../components/Themed";
-import { Image } from "react-native";
+import { Image, useWindowDimensions } from "react-native";
+
+const heightWidthRatio = 690 / 600;
 
 export default function Intro4() {
+  const { width: windowWidth } = useWindowDimensions();
+  // because of padding 50 on container
+  const width = windowWidth - 100;
   return (
     <AIntroScreen headerText="Overview">
       <View style={abstractStyles.childrenBody}>
         <Image
-          style={abstractStyles.image}
-          source={require("../../../assets/images/avocado-man.png")}
+          style={{
+            ...abstractStyles.image,
+            borderBottomWidth: 1,
+            width,
+            height: heightWidthRatio * width,
+          }}
+          source={require("../../../assets/animations/onboarding2.gif")}
         />
         <Text style={abstractStyles.bodyText}>
           After you have identified and named your episodes, you will complete a

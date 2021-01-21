@@ -37,7 +37,7 @@ export const styles = StyleSheet.create({
     fontFamily: "Inter_700Bold",
     color: Colors.avocadoGreen,
   },
-  body: { flex: 1, justifyContent: "space-between" },
+  body: { flex: 1, justifyContent: "space-between", zIndex: -1 },
   bodyText: {
     color: Colors.darkText,
     fontSize: 18,
